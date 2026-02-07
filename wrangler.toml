@@ -1,0 +1,12 @@
+name = "strava-running-dashboard"
+main = "src/index.ts"
+compatibility_date = "2025-02-05"
+
+[durable_objects]
+bindings = [
+  { name = "RUNNING_DASHBOARD", class_name = "RunningDashboard" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RunningDashboard"]
