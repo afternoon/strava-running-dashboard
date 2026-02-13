@@ -101,7 +101,7 @@ function renderChart(currentYear: number, yearsData: YearData[], goal: number): 
         color: colors[yr]?.color ?? "#888",
         dash: "",
       })),
-    { label: "Goal (1100km)", color: "#999", dash: "6,4" },
+    { label: "Goal (1,100km)", color: "#999", dash: "6,4" },
   ];
 
   let legend = "";
