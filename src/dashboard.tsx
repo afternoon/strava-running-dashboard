@@ -154,20 +154,9 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Running Dashboard</title>
-        <style>{`
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; color: #333; padding: 24px; }
-          h1 { font-size: 24px; margin-bottom: 20px; }
-          .cards { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
-          .card { background: white; border-radius: 8px; padding: 20px; flex: 1; min-width: 160px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-          .card .label { font-size: 13px; color: #666; margin-bottom: 4px; }
-          .card .value { font-size: 4em; font-weight: 700; padding: 1em 0; }
-          .chart-container { background: white; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-          .footer { margin-top: 20px; font-size: 13px; color: #999; }
-          .footer a { color: #666; }
-        `}</style>
+        <link rel="stylesheet" href="/styles.css" />
       </head>
-      <body>
+      <body class="dashboard">
         <h1>Running Dashboard {currentYear}</h1>
         <div class="cards">
           <div class="card">
@@ -201,17 +190,9 @@ export function ConnectPage() {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Connect Strava</title>
-        <style>{`
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: system-ui, sans-serif; background: #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-          .container { text-align: center; background: white; padding: 48px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-          h1 { margin-bottom: 16px; font-size: 2em; }
-          p { color: #666; margin-bottom: 24px; }
-          a.btn { display: inline-block; background: #FC4C02; color: white; text-decoration: none; padding: 12px 32px; border-radius: 6px; font-weight: 600; }
-          a.btn:hover { background: #e04400; }
-        `}</style>
+        <link rel="stylesheet" href="/styles.css" />
       </head>
-      <body>
+      <body class="connect">
         <div class="container">
           <h1>Running Dashboard</h1>
           <p>Connect your Strava account to get started.</p>

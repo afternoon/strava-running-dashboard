@@ -2,6 +2,9 @@ name = "strava-running-dashboard"
 main = "src/index.tsx"
 compatibility_date = "2026-01-20"
 
+[assets]
+directory = "./public"
+
 [observability]
 enabled = false
 head_sampling_rate = 1
