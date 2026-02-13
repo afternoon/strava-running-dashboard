@@ -37,8 +37,8 @@ function buildYearData(activities: Activity[], year: number): YearData {
 }
 
 function Chart({ currentYear, yearsData, goal }: { currentYear: number; yearsData: YearData[]; goal: number }) {
-  const W = 800;
-  const H = 400;
+  const W = 1000;
+  const H = 500;
   const pad = { top: 30, right: 30, bottom: 40, left: 60 };
   const plotW = W - pad.left - pad.right;
   const plotH = H - pad.top - pad.bottom;
@@ -161,7 +161,7 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
           .cards { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
           .card { background: white; border-radius: 8px; padding: 20px; flex: 1; min-width: 160px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
           .card .label { font-size: 13px; color: #666; margin-bottom: 4px; }
-          .card .value { font-size: 28px; font-weight: 700; }
+          .card .value { font-size: 4em; font-weight: 700; padding: 1em 0; }
           .chart-container { background: white; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
           .footer { margin-top: 20px; font-size: 13px; color: #999; }
           .footer a { color: #666; }
