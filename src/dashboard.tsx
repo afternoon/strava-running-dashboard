@@ -165,7 +165,21 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
         <link rel="stylesheet" href="/styles.css" />
       </head>
       <body class="dashboard">
-        <h1>Running {currentYear}</h1>
+        <h1>Running Dashboard {currentYear}</h1>
+        <div class="cards">
+          <div class="card">
+            <div class="label">Distance this year</div>
+            <div class="value">{totalKm.toFixed(1)} km</div>
+          </div>
+          <div class="card">
+            <div class="label">Target by today</div>
+            <div class="value">{targetByToday.toFixed(1)} km</div>
+          </div>
+          <div class="card">
+            <div class="label">Delta</div>
+            <div class="value" style={`color:${deltaColor}`}>{deltaSign}{delta.toFixed(1)} km</div>
+          </div>
+        </div>
         <div class="chart-container">
           <Chart currentYear={currentYear} yearsData={yearsData} goal={goal} />
         </div>
