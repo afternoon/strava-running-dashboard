@@ -203,7 +203,7 @@ export function ConnectPage() {
         <title>Connect Strava</title>
         <style>{`
           * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+          body { font-family: system-ui, sans-serif; background: #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
           .container { text-align: center; background: white; padding: 48px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
           h1 { margin-bottom: 16px; font-size: 2em; }
           p { color: #666; margin-bottom: 24px; }
