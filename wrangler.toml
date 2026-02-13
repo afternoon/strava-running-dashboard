@@ -1,4 +1,4 @@
-name = "strava-running-dashboard"
+name = "strava-running-dashboard-workers"
 main = "src/index.ts"
 compatibility_date = "2025-02-05"
 
