@@ -5,7 +5,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 body.dashboard { padding: 24px; }
 body.dashboard h1 { font-size: 24px; margin-bottom: 20px; }
 .cards { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
-.card { background: white; border-radius: 8px; padding: 20px; flex: 1; min-width: 160px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.card { background: white; border-radius: 8px; padding: 0.75em; flex: 1; min-width: 160px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
 .card .label { font-size: 13px; color: #666; margin-bottom: 4px; }
 .card .value { font-size: 4em; font-weight: 700; padding: 1em 0; }
 .chart-container { background: white; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
