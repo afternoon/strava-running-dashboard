@@ -5,7 +5,7 @@ import {
   fetchActivity,
   getValidAccessToken,
 } from "./strava";
-import { renderConnectPage, renderDashboard } from "./dashboard";
+import type { DashboardData } from "./dashboard";
 
 interface WebhookEvent {
   object_type: string;
@@ -50,16 +50,16 @@ export class RunningDashboard extends DurableObject<Env> {
     return row.length > 0;
   }
 
-  async getDashboardHtml(): Promise<string> {
+  async getDashboardData(): Promise<DashboardData> {
     if (!this.hasToken()) {
-      return renderConnectPage();
+      return { connected: false };
     }
 
     const activities = this.sql
       .exec("SELECT distance_meters, start_date FROM activities ORDER BY start_date ASC")
       .toArray() as { distance_meters: number; start_date: string }[];
 
-    return renderDashboard(activities);
+    return { connected: true, activities };
   }
 
   async handleOAuthCallback(code: string): Promise<Response> {

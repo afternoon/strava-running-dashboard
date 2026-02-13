@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { RunningDashboard } from "./durable-object";
+import { ConnectPage, Dashboard } from "./dashboard";
 
 type AppEnv = { Bindings: Env };
 
@@ -12,8 +13,11 @@ function getStub(c: { env: Env }): DurableObjectStub<RunningDashboard> {
 
 app.get("/", async (c) => {
   const stub = getStub(c);
-  const html = await stub.getDashboardHtml();
-  return c.html(html);
+  const data = await stub.getDashboardData();
+  if (!data.connected) {
+    return c.html(<ConnectPage />);
+  }
+  return c.html(<Dashboard activities={data.activities} />);
 });
 
 app.get("/webhook", (c) => {
