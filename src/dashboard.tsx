@@ -154,9 +154,9 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Running Dashboard</title>
-        <link rel="stylesheet" href="/dashboard.css" />
+        <link rel="stylesheet" href="/styles.css" />
       </head>
-      <body>
+      <body class="dashboard">
         <h1>Running Dashboard {currentYear}</h1>
         <div class="cards">
           <div class="card">
@@ -190,9 +190,9 @@ export function ConnectPage() {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Connect Strava</title>
-        <link rel="stylesheet" href="/connect.css" />
+        <link rel="stylesheet" href="/styles.css" />
       </head>
-      <body>
+      <body class="connect">
         <div class="container">
           <h1>Running Dashboard</h1>
           <p>Connect your Strava account to get started.</p>
