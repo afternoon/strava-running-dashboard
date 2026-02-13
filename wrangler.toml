@@ -1,6 +1,21 @@
 name = "strava-running-dashboard"
 main = "src/index.ts"
-compatibility_date = "2025-02-05"
+compatibility_date = "2026-01-20"
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1
 
 [durable_objects]
 bindings = [
