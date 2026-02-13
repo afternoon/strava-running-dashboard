@@ -148,6 +148,14 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
   const deltaColor = delta >= 0 ? "#34a853" : "#d93025";
   const deltaSign = delta >= 0 ? "+" : "";
 
+  const weeklyKm = thisYearActivities
+    .filter((a) => {
+      const d = new Date(a.start_date);
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return d >= weekAgo;
+    })
+    .reduce((sum, a) => sum + a.distance_meters / 1000, 0);
+
   return (
     <html lang="en">
       <head>
@@ -157,23 +165,29 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
         <link rel="stylesheet" href="/styles.css" />
       </head>
       <body class="dashboard">
-        <h1>Running Dashboard {currentYear}</h1>
-        <div class="cards">
-          <div class="card">
-            <div class="label">Distance this year</div>
-            <div class="value">{totalKm.toFixed(1)} km</div>
-          </div>
-          <div class="card">
-            <div class="label">Target by today</div>
-            <div class="value">{targetByToday.toFixed(1)} km</div>
-          </div>
-          <div class="card">
-            <div class="label">Delta</div>
-            <div class="value" style={`color:${deltaColor}`}>{deltaSign}{delta.toFixed(1)} km</div>
-          </div>
-        </div>
+        <h1>Running {currentYear}</h1>
         <div class="chart-container">
           <Chart currentYear={currentYear} yearsData={yearsData} goal={goal} />
+        </div>
+        <div class="metrics-card">
+          <table class="metrics-table">
+            <tr>
+              <td class="metric-label">Distance</td>
+              <td class="metric-value">{totalKm.toFixed(1)} km</td>
+            </tr>
+            <tr>
+              <td class="metric-label">Target</td>
+              <td class="metric-value">{targetByToday.toFixed(1)} km</td>
+            </tr>
+            <tr>
+              <td class="metric-label">Delta</td>
+              <td class="metric-value" style={`color:${deltaColor}`}>{deltaSign}{delta.toFixed(1)} km</td>
+            </tr>
+            <tr>
+              <td class="metric-label">Last 7 days</td>
+              <td class="metric-value">{weeklyKm.toFixed(1)} km</td>
+            </tr>
+          </table>
         </div>
         <div class="footer">
           <a href="/sync">Sync all activities</a>
