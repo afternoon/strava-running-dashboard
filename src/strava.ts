@@ -29,7 +29,7 @@ export async function exchangeToken(
       grant_type: "authorization_code",
     }),
   });
-  if (!res.ok) throw new Error(`Token exchange failed: ${res.status}`);
+  if (!res.ok) throw new Error(`Token exchange failed: ${res.status} ${await res.text()}`);
   const data = (await res.json()) as {
     athlete: { id: number };
     access_token: string;
@@ -59,7 +59,7 @@ export async function refreshToken(
       grant_type: "refresh_token",
     }),
   });
-  if (!res.ok) throw new Error(`Token refresh failed: ${res.status}`);
+  if (!res.ok) throw new Error(`Token refresh failed: ${res.status} ${await res.text()}`);
   const data = (await res.json()) as {
     access_token: string;
     refresh_token: string;
@@ -107,7 +107,7 @@ export async function fetchActivity(
     `https://www.strava.com/api/v3/activities/${activityId}`,
     { headers: { Authorization: `Bearer ${accessToken}` } }
   );
-  if (!res.ok) throw new Error(`Fetch activity failed: ${res.status}`);
+  if (!res.ok) throw new Error(`Fetch activity failed: ${res.status} ${await res.text()}`);
   return (await res.json()) as StravaActivity;
 }
 
@@ -124,7 +124,7 @@ export async function fetchActivitiesAfter(
       `https://www.strava.com/api/v3/athlete/activities?after=${afterEpoch}&page=${page}&per_page=${perPage}`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
-    if (!res.ok) throw new Error(`Fetch activities failed: ${res.status}`);
+    if (!res.ok) throw new Error(`Fetch activities failed: ${res.status} ${await res.text()}`);
     const batch = (await res.json()) as StravaActivity[];
     all.push(...batch);
     if (batch.length < perPage) break;
