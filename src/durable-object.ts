@@ -62,7 +62,7 @@ export class RunningDashboard extends DurableObject<Env> {
     return { connected: true, activities };
   }
 
-  async handleOAuthCallback(code: string): Promise<Response> {
+  async handleOAuthCallback(code: string): Promise<void> {
     const token = await exchangeToken(
       code,
       this.env.STRAVA_CLIENT_ID,
@@ -82,8 +82,6 @@ export class RunningDashboard extends DurableObject<Env> {
       token.refresh_token,
       token.expires_at
     );
-
-    return Response.redirect("/", 302);
   }
 
   async handleWebhookEvent(event: WebhookEvent): Promise<void> {
