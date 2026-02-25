@@ -53,7 +53,8 @@ app.get("/auth/callback", async (c) => {
   const code = c.req.query("code");
   if (!code) return c.text("Missing code", 400);
   const stub = getStub(c);
-  return await stub.handleOAuthCallback(code);
+  await stub.handleOAuthCallback(code);
+  return c.redirect("/");
 });
 
 app.get("/sync", async (c) => {
