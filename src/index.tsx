@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { RunningDashboard } from "./durable-object";
 import { ConnectPage, Dashboard } from "./dashboard";
+import { getWebhookSubscription, createWebhookSubscription } from "./strava";
 
 type AppEnv = { Bindings: Env };
 
@@ -36,6 +37,24 @@ app.post("/webhook", async (c) => {
   const stub = getStub(c);
   c.executionCtx.waitUntil(stub.handleWebhookEvent(body));
   return c.text("OK", 200);
+});
+
+app.post("/webhook/register", async (c) => {
+  const existing = await getWebhookSubscription(
+    c.env.STRAVA_CLIENT_ID,
+    c.env.STRAVA_CLIENT_SECRET
+  );
+  if (existing) {
+    return c.json({ status: "already_registered", subscription: existing });
+  }
+  const callbackUrl = new URL("/webhook", c.req.url).toString();
+  const subscription = await createWebhookSubscription(
+    c.env.STRAVA_CLIENT_ID,
+    c.env.STRAVA_CLIENT_SECRET,
+    callbackUrl,
+    c.env.STRAVA_WEBHOOK_VERIFY_TOKEN
+  );
+  return c.json({ status: "registered", subscription });
 });
 
 app.get("/auth", (c) => {
