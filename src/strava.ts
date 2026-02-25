@@ -111,6 +111,46 @@ export async function fetchActivity(
   return (await res.json()) as StravaActivity;
 }
 
+export interface WebhookSubscription {
+  id: number;
+  callback_url: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export async function getWebhookSubscription(
+  clientId: string,
+  clientSecret: string
+): Promise<WebhookSubscription | null> {
+  const url = new URL("https://www.strava.com/api/v3/push_subscriptions");
+  url.searchParams.set("client_id", clientId);
+  url.searchParams.set("client_secret", clientSecret);
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`Get webhook subscription failed: ${res.status} ${await res.text()}`);
+  const data = (await res.json()) as WebhookSubscription[];
+  return data.length > 0 ? data[0] : null;
+}
+
+export async function createWebhookSubscription(
+  clientId: string,
+  clientSecret: string,
+  callbackUrl: string,
+  verifyToken: string
+): Promise<WebhookSubscription> {
+  const res = await fetch("https://www.strava.com/api/v3/push_subscriptions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: clientId,
+      client_secret: clientSecret,
+      callback_url: callbackUrl,
+      verify_token: verifyToken,
+    }),
+  });
+  if (!res.ok) throw new Error(`Create webhook subscription failed: ${res.status} ${await res.text()}`);
+  return (await res.json()) as WebhookSubscription;
+}
+
 export async function fetchActivitiesAfter(
   afterEpoch: number,
   accessToken: string
