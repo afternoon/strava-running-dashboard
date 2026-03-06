@@ -1,5 +1,10 @@
-node_modules/
-dist/
-.wrangler/
-.dev.vars
-worker-configuration.d.ts
+web/node_modules/
+web/dist/
+web/.wrangler/
+web/.dev.vars
+web/worker-configuration.d.ts
+ios/StravaRunning/StravaRunning.xcodeproj/xcuserdata/
+ios/StravaRunning/StravaRunning.xcodeproj/project.xcworkspace/xcuserdata/
+ios/StravaRunning/.build/
+ios/**/.DS_Store
+.DS_Store
