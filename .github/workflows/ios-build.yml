@@ -1,0 +1,171 @@
+# iOS Ad-Hoc Build & Distribute
+#
+# Builds a signed .ipa and attaches it to a GitHub Release so you can
+# install it directly on your registered personal device.
+#
+# ── Triggers ──────────────────────────────────────────────────────────────
+#   • Push a tag:  git tag v1.0.0 && git push origin v1.0.0
+#   • Or run manually from the Actions tab (workflow_dispatch)
+#
+# ── One-time setup ────────────────────────────────────────────────────────
+# Add these four secrets in Settings → Secrets and variables → Actions:
+#
+#   IOS_CERTIFICATE_BASE64
+#     Your distribution/development .p12 certificate, base64-encoded.
+#     To export: Keychain Access → right-click cert → Export → save as .p12
+#     Then: base64 -i MyApp.p12 | pbcopy
+#
+#   IOS_CERTIFICATE_PASSWORD
+#     The password you set when exporting the .p12 (can be empty string "").
+#
+#   IOS_PROVISIONING_PROFILE_BASE64
+#     An Ad Hoc provisioning profile from developer.apple.com that includes
+#     your device UDID.  Download the .mobileprovision file, then:
+#     base64 -i MyApp_AdHoc.mobileprovision | pbcopy
+#
+#   APPLE_TEAM_ID
+#     Your 10-character Apple Team ID (visible on developer.apple.com → Account).
+#
+# ── Installing the .ipa on your iPhone ────────────────────────────────────
+#   Option A – Finder (macOS 10.15+):
+#     1. Connect iPhone via cable
+#     2. In Finder sidebar click your iPhone → Files tab
+#     3. Drag the .ipa onto "StravaRunning" in the app list
+#
+#   Option B – Apple Configurator 2 (free on Mac App Store):
+#     Device → Add → Apps → choose the .ipa
+#
+# ─────────────────────────────────────────────────────────────────────────
+
+name: iOS Ad-Hoc Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to create GitHub Releases
+
+jobs:
+  build:
+    name: Build & export IPA
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── 1. Install certificate & provisioning profile ──────────────────
+      - name: Import signing assets
+        env:
+          CERT_P12_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          CERT_PASSWORD:   ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          PROFILE_BASE64:  ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          # Create a temporary keychain so we don't touch the login keychain.
+          KC_PASS=$(uuidgen)
+          security create-keychain -p "$KC_PASS" build.keychain
+          security list-keychains -d user -s build.keychain $(security list-keychains -d user | tr -d '"')
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KC_PASS" build.keychain
+          security set-keychain-settings -t 3600 build.keychain
+
+          # Import the .p12 certificate.
+          echo "$CERT_P12_BASE64" | base64 --decode > certificate.p12
+          security import certificate.p12 \
+            -k build.keychain -P "$CERT_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list \
+            -S apple-tool:,apple:,codesign: -s -k "$KC_PASS" build.keychain
+
+          # Install the provisioning profile.
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$PROFILE_BASE64" | base64 --decode > profile.mobileprovision
+          PP_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin \
+            <<< "$(security cms -D -i profile.mobileprovision)")
+          cp profile.mobileprovision \
+            ~/Library/MobileDevice/Provisioning\ Profiles/"$PP_UUID".mobileprovision
+
+          # Expose the identity name and profile name to later steps.
+          CODE_SIGN_IDENTITY=$(security find-identity -v -p codesigning build.keychain \
+            | awk -F'"' 'NR==1{print $2}')
+          PP_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin \
+            <<< "$(security cms -D -i profile.mobileprovision)")
+
+          echo "CODE_SIGN_IDENTITY=$CODE_SIGN_IDENTITY" >> "$GITHUB_ENV"
+          echo "PP_NAME=$PP_NAME"                       >> "$GITHUB_ENV"
+
+      # ── 2. Build Xcode archive ─────────────────────────────────────────
+      - name: Archive
+        run: |
+          xcodebuild archive \
+            -project ios/StravaRunning/StravaRunning.xcodeproj \
+            -scheme StravaRunning \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -archivePath "$RUNNER_TEMP/StravaRunning.xcarchive" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="$CODE_SIGN_IDENTITY" \
+            PROVISIONING_PROFILE_SPECIFIER="$PP_NAME" \
+            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
+            | xcpretty || true
+
+      # ── 3. Export signed .ipa ──────────────────────────────────────────
+      - name: Export IPA
+        run: |
+          TEAM_ID="${{ secrets.APPLE_TEAM_ID }}"
+          cat > "$RUNNER_TEMP/ExportOptions.plist" << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+            "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>ad-hoc</string>
+            <key>teamID</key>
+            <string>$TEAM_ID</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.personal.StravaRunning</key>
+              <string>$PP_NAME</string>
+            </dict>
+            <key>thinning</key>
+            <string>&lt;none&gt;</string>
+          </dict>
+          </plist>
+          EOF
+
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/StravaRunning.xcarchive" \
+            -exportPath   "$RUNNER_TEMP/ipa" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist"
+
+      # ── 4a. Always upload as a workflow artifact (30-day retention) ────
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: StravaRunning-${{ github.ref_name || github.run_number }}
+          path: ${{ runner.temp }}/ipa/*.ipa
+          retention-days: 30
+
+      # ── 4b. On tag push, also attach to a GitHub Release ──────────────
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ runner.temp }}/ipa/*.ipa
+          name: "iOS ${{ github.ref_name }}"
+          body: |
+            ## Install on your iPhone
+
+            1. Download **StravaRunning.ipa** from the Assets below.
+            2. Connect your iPhone to your Mac via USB.
+            3. Open **Finder** → select your iPhone in the sidebar →
+               **Files** tab → drag the `.ipa` onto the StravaRunning row.
+
+            Alternatively, use **Apple Configurator 2** (free on the Mac App Store):
+            select your device → **Add → Apps** → pick the `.ipa`.
+
+            > Your device UDID must be registered in the Apple Developer Portal
+            > and included in the provisioning profile used to build this release.

@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { RunningDashboard } from "./durable-object";
 import { ConnectPage, Dashboard } from "./dashboard";
 import { getWebhookSubscription, createWebhookSubscription } from "./strava";
+import { handleGraphQL } from "./graphql";
 
 type AppEnv = { Bindings: Env };
 
@@ -80,6 +81,13 @@ app.get("/sync", async (c) => {
   const stub = getStub(c);
   const count = await stub.handleSync();
   return c.html(`<p>Synced ${count} runs. <a href="/">Back to dashboard</a></p>`);
+});
+
+// GraphQL API — used by the iOS app (and any other clients).
+// Set DASHBOARD_API_KEY secret to require Bearer token authentication.
+app.all("/graphql", async (c) => {
+  const stub = getStub(c);
+  return handleGraphQL(c.req.raw, stub, c.env.DASHBOARD_API_KEY);
 });
 
 export { RunningDashboard };
