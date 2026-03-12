@@ -1,9 +1,12 @@
 import SwiftUI
+import WidgetKit
+
+private let sharedDefaults = UserDefaults(suiteName: "group.com.ben2.StravaRunning") ?? .standard
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var apiURL = UserDefaults.standard.string(forKey: "apiURL") ?? "https://running.ben2.com"
-    @State private var apiKey = UserDefaults.standard.string(forKey: "apiKey") ?? ""
+    @State private var apiURL = sharedDefaults.string(forKey: "apiURL") ?? "https://running.ben2.com"
+    @State private var apiKey = sharedDefaults.string(forKey: "apiKey") ?? ""
 
     var body: some View {
         NavigationStack {
@@ -37,8 +40,9 @@ struct SettingsView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        UserDefaults.standard.set(apiURL, forKey: "apiURL")
-                        UserDefaults.standard.set(apiKey, forKey: "apiKey")
+                        sharedDefaults.set(apiURL, forKey: "apiURL")
+                        sharedDefaults.set(apiKey, forKey: "apiKey")
+                        WidgetCenter.shared.reloadAllTimelines()
                         dismiss()
                     }
                     .bold()

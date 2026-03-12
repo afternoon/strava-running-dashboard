@@ -19,6 +19,8 @@
 		CC00000A00000000000000CA /* GraphQLClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000A00000000000000BA /* GraphQLClient.swift */; };
 		CC00000B00000000000000CB /* DashboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000B00000000000000BB /* DashboardModels.swift */; };
 		CC00000C00000000000000CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB00000C00000000000000BC /* Assets.xcassets */; };
+		A100000200000000000000A2 /* RunningWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000100000000000000A1 /* RunningWidget.swift */; };
+		A100000F00000000000000AF /* RunningWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A100000300000000000000A3 /* RunningWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +37,19 @@
 		BB00000A00000000000000BA /* GraphQLClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQLClient.swift; sourceTree = "<group>"; };
 		BB00000B00000000000000BB /* DashboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardModels.swift; sourceTree = "<group>"; };
 		BB00000C00000000000000BC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A100000100000000000000A1 /* RunningWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningWidget.swift; sourceTree = "<group>"; };
+		A100000300000000000000A3 /* RunningWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RunningWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXContainerItemProxy section */
+		A100000C00000000000000AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A00000100000000000000A1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A100000800000000000000A8;
+			remoteInfo = RunningWidget;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		7A00000B00000000000000AB /* Frameworks */ = {
@@ -52,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				7A00000400000000000000A4 /* StravaRunning */,
+				A100000400000000000000A4 /* RunningWidget */,
 				7A00000300000000000000A3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -60,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				7A00000900000000000000A9 /* StravaRunning.app */,
+				A100000300000000000000A3 /* RunningWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,6 +123,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		A100000400000000000000A4 /* RunningWidget */ = {
+			isa = PBXGroup;
+			children = (
+				A100000100000000000000A1 /* RunningWidget.swift */,
+			);
+			path = RunningWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -117,15 +141,34 @@
 				7A00000A00000000000000AA /* Sources */,
 				7A00000B00000000000000AB /* Frameworks */,
 				7A00000C00000000000000AC /* Resources */,
+				A100000E00000000000000AE /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A100000D00000000000000AD /* PBXTargetDependency */,
 			);
 			name = StravaRunning;
 			productName = StravaRunning;
 			productReference = 7A00000900000000000000A9 /* StravaRunning.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A100000800000000000000A8 /* RunningWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A100000B00000000000000AB /* Build configuration list for PBXNativeTarget "RunningWidget" */;
+			buildPhases = (
+				A100000500000000000000A5 /* Sources */,
+				A100000600000000000000A6 /* Frameworks */,
+				A100000700000000000000A7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RunningWidget;
+			productName = RunningWidget;
+			productReference = A100000300000000000000A3 /* RunningWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -138,6 +181,9 @@
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					7A00000800000000000000A8 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					A100000800000000000000A8 = {
 						CreatedOnToolsVersion = 15.0;
 					};
 				};
@@ -156,9 +202,24 @@
 			projectRoot = "";
 			targets = (
 				7A00000800000000000000A8 /* StravaRunning */,
+				A100000800000000000000A8 /* RunningWidget */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A100000E00000000000000AE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A100000F00000000000000AF /* RunningWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7A00000C00000000000000AC /* Resources */ = {
@@ -166,6 +227,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC00000C00000000000000CC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A100000700000000000000A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,7 +258,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A100000500000000000000A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000200000000000000A2 /* RunningWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXFrameworksBuildPhase section (widget) */
+		A100000600000000000000A6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section (widget) */
+
+/* Begin PBXTargetDependency section */
+		A100000D00000000000000AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A100000800000000000000A8 /* RunningWidget */;
+			targetProxy = A100000C00000000000000AC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		7A00000D00000000000000AD /* Debug */ = {
@@ -315,6 +409,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StravaRunning/StravaRunning.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -329,7 +424,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.personal.StravaRunning";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ben2.StravaRunning";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -342,6 +437,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StravaRunning/StravaRunning.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -356,8 +452,56 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.personal.StravaRunning";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ben2.StravaRunning";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A100000900000000000000A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = RunningWidget/RunningWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ben2.StravaRunning.RunningWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A100000A00000000000000AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = RunningWidget/RunningWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ben2.StravaRunning.RunningWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -381,6 +525,15 @@
 			buildConfigurations = (
 				7A00001000000000000000B0 /* Debug */,
 				7A00001100000000000000B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A100000B00000000000000AB /* Build configuration list for PBXNativeTarget "RunningWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A100000900000000000000A9 /* Debug */,
+				A100000A00000000000000AA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
