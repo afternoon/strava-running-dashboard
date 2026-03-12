@@ -1,6 +1,6 @@
 import Foundation
 
-private let sharedDefaults = UserDefaults(suiteName: "group.com.personal.StravaRunning") ?? .standard
+private let sharedDefaults = UserDefaults(suiteName: "group.com.ben2.StravaRunning") ?? .standard
 
 @MainActor
 final class AppState: ObservableObject {

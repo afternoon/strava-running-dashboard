@@ -1,7 +1,7 @@
 import SwiftUI
 import WidgetKit
 
-private let sharedDefaults = UserDefaults(suiteName: "group.com.personal.StravaRunning") ?? .standard
+private let sharedDefaults = UserDefaults(suiteName: "group.com.ben2.StravaRunning") ?? .standard
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss

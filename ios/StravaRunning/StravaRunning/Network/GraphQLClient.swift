@@ -74,7 +74,7 @@ final class GraphQLClient {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let sharedDefaults = UserDefaults(suiteName: "group.com.personal.StravaRunning") ?? .standard
+        let sharedDefaults = UserDefaults(suiteName: "group.com.ben2.StravaRunning") ?? .standard
         if let key = sharedDefaults.string(forKey: "apiKey"), !key.isEmpty {
             request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
         }

@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.personal.StravaRunning</string>
+		<string>group.com.ben2.StravaRunning</string>
 	</array>
 </dict>
 </plist>

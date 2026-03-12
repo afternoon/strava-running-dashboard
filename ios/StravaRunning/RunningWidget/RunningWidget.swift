@@ -3,7 +3,7 @@ import SwiftUI
 
 // MARK: - Shared configuration
 
-private let appGroupID  = "group.com.personal.StravaRunning"
+private let appGroupID  = "group.com.ben2.StravaRunning"
 private let apiURLKey   = "apiURL"
 private let apiKeyKey   = "apiKey"
 private let defaultURL  = "https://running.ben2.com"
