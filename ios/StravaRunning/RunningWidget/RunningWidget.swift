@@ -140,6 +140,7 @@ struct RunningWidgetView: View {
 
 // MARK: - Widget configuration
 
+@main
 struct RunningWidget: Widget {
     let kind = "RunningWidget"
 
