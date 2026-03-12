@@ -1,5 +1,7 @@
 import Foundation
 
+private let sharedDefaults = UserDefaults(suiteName: "group.com.personal.StravaRunning") ?? .standard
+
 @MainActor
 final class AppState: ObservableObject {
     @Published var isConnected = false
@@ -10,7 +12,7 @@ final class AppState: ObservableObject {
     private var client: GraphQLClient
 
     init() {
-        let url = UserDefaults.standard.string(forKey: "apiURL") ?? "https://running.ben2.com"
+        let url = sharedDefaults.string(forKey: "apiURL") ?? "https://running.ben2.com"
         client = GraphQLClient(baseURL: url)
     }
 
@@ -19,7 +21,7 @@ final class AppState: ObservableObject {
         errorMessage = nil
 
         // Re-create client in case settings changed.
-        let url = UserDefaults.standard.string(forKey: "apiURL") ?? "https://running.ben2.com"
+        let url = sharedDefaults.string(forKey: "apiURL") ?? "https://running.ben2.com"
         client = GraphQLClient(baseURL: url)
 
         do {
