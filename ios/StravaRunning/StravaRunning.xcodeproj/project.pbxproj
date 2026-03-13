@@ -3,12 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A100000200000000000000A2 /* RunningWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000100000000000000A1 /* RunningWidget.swift */; };
-		A100000F00000000000000AF /* RunningWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A100000300000000000000A3 /* RunningWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CB69E7632F64BEAC00278492 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB69E7622F64BEAC00278492 /* WidgetKit.framework */; };
+		CB69E7652F64BEAC00278492 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB69E7642F64BEAC00278492 /* SwiftUI.framework */; };
+		CB69E7782F64BFF500278492 /* RunningWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CB69E7602F64BEAC00278492 /* RunningWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CC00000100000000000000C1 /* StravaRunningApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000000000000B1 /* StravaRunningApp.swift */; };
 		CC00000200000000000000C2 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000000B2 /* AppState.swift */; };
 		CC00000300000000000000C3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000300000000000000B3 /* ContentView.swift */; };
@@ -24,34 +25,31 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A100000C00000000000000AC /* PBXContainerItemProxy */ = {
+		CB69E7702F64BEAD00278492 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7A00000100000000000000A1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = A100000800000000000000A8;
-			remoteInfo = RunningWidget;
+			remoteGlobalIDString = CB69E75F2F64BEAC00278492;
+			remoteInfo = RunningWidgetExtension;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		A100000E00000000000000AE /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				A100000F00000000000000AF /* RunningWidget.appex in Embed Foundation Extensions */,
+				CB69E7782F64BFF500278492 /* RunningWidget.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7A00000900000000000000A9 /* StravaRunning.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StravaRunning.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A100000100000000000000A1 /* RunningWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningWidget.swift; sourceTree = "<group>"; };
-		A100000300000000000000A3 /* RunningWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RunningWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		A100001000000000000000B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB00000100000000000000B1 /* StravaRunningApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StravaRunningApp.swift; sourceTree = "<group>"; };
 		BB00000200000000000000B2 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		BB00000300000000000000B3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -64,7 +62,24 @@
 		BB00000A00000000000000BA /* GraphQLClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQLClient.swift; sourceTree = "<group>"; };
 		BB00000B00000000000000BB /* DashboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardModels.swift; sourceTree = "<group>"; };
 		BB00000C00000000000000BC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CB69E7602F64BEAC00278492 /* RunningWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RunningWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB69E7622F64BEAC00278492 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		CB69E7642F64BEAC00278492 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CB69E7732F64BEAD00278492 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CB69E75F2F64BEAC00278492 /* RunningWidget */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		CB69E7662F64BEAC00278492 /* RunningWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (CB69E7732F64BEAD00278492 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = RunningWidget; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		7A00000B00000000000000AB /* Frameworks */ = {
@@ -74,10 +89,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A100000600000000000000A6 /* Frameworks */ = {
+		CB69E75D2F64BEAC00278492 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB69E7652F64BEAC00278492 /* SwiftUI.framework in Frameworks */,
+				CB69E7632F64BEAC00278492 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				7A00000400000000000000A4 /* StravaRunning */,
-				A100000400000000000000A4 /* RunningWidget */,
+				CB69E7662F64BEAC00278492 /* RunningWidget */,
+				CB69E7612F64BEAC00278492 /* Frameworks */,
 				7A00000300000000000000A3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -97,7 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				7A00000900000000000000A9 /* StravaRunning.app */,
-				A100000300000000000000A3 /* RunningWidget.appex */,
+				CB69E7602F64BEAC00278492 /* RunningWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -145,13 +163,13 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		A100000400000000000000A4 /* RunningWidget */ = {
+		CB69E7612F64BEAC00278492 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A100000100000000000000A1 /* RunningWidget.swift */,
-				A100001000000000000000B0 /* Info.plist */,
+				CB69E7622F64BEAC00278492 /* WidgetKit.framework */,
+				CB69E7642F64BEAC00278492 /* SwiftUI.framework */,
 			);
-			path = RunningWidget;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -169,28 +187,33 @@
 			buildRules = (
 			);
 			dependencies = (
-				A100000D00000000000000AD /* PBXTargetDependency */,
+				CB69E7712F64BEAD00278492 /* PBXTargetDependency */,
 			);
 			name = StravaRunning;
 			productName = StravaRunning;
 			productReference = 7A00000900000000000000A9 /* StravaRunning.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A100000800000000000000A8 /* RunningWidget */ = {
+		CB69E75F2F64BEAC00278492 /* RunningWidget */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A100000B00000000000000AB /* Build configuration list for PBXNativeTarget "RunningWidget" */;
+			buildConfigurationList = CB69E7742F64BEAD00278492 /* Build configuration list for PBXNativeTarget "RunningWidget" */;
 			buildPhases = (
-				A100000500000000000000A5 /* Sources */,
-				A100000600000000000000A6 /* Frameworks */,
-				A100000700000000000000A7 /* Resources */,
+				CB69E75C2F64BEAC00278492 /* Sources */,
+				CB69E75D2F64BEAC00278492 /* Frameworks */,
+				CB69E75E2F64BEAC00278492 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				CB69E7662F64BEAC00278492 /* RunningWidget */,
+			);
 			name = RunningWidget;
-			productName = RunningWidget;
-			productReference = A100000300000000000000A3 /* RunningWidget.appex */;
+			packageProductDependencies = (
+			);
+			productName = RunningWidgetExtension;
+			productReference = CB69E7602F64BEAC00278492 /* RunningWidget.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -200,14 +223,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					7A00000800000000000000A8 = {
 						CreatedOnToolsVersion = 15.0;
 					};
-					A100000800000000000000A8 = {
-						CreatedOnToolsVersion = 15.0;
+					CB69E75F2F64BEAC00278492 = {
+						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
@@ -225,7 +248,7 @@
 			projectRoot = "";
 			targets = (
 				7A00000800000000000000A8 /* StravaRunning */,
-				A100000800000000000000A8 /* RunningWidget */,
+				CB69E75F2F64BEAC00278492 /* RunningWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -239,7 +262,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A100000700000000000000A7 /* Resources */ = {
+		CB69E75E2F64BEAC00278492 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -267,21 +290,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A100000500000000000000A5 /* Sources */ = {
+		CB69E75C2F64BEAC00278492 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A100000200000000000000A2 /* RunningWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A100000D00000000000000AD /* PBXTargetDependency */ = {
+		CB69E7712F64BEAD00278492 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A100000800000000000000A8 /* RunningWidget */;
-			targetProxy = A100000C00000000000000AC /* PBXContainerItemProxy */;
+			target = CB69E75F2F64BEAC00278492 /* RunningWidget */;
+			targetProxy = CB69E7702F64BEAD00278492 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -416,6 +438,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Running Goals";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -444,6 +467,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Running Goals";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -463,51 +487,64 @@
 			};
 			name = Release;
 		};
-		A100000900000000000000A9 /* Debug */ = {
+		CB69E7752F64BEAD00278492 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = RunningWidget/RunningWidget.entitlements;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
-				INFOPLIST_KEY_NSExtension_NSExtensionPrincipalClass = "$(PRODUCT_MODULE_NAME).RunningWidget";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				INFOPLIST_FILE = RunningWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RunningWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ben2.StravaRunning.RunningWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		A100000A00000000000000AA /* Release */ = {
+		CB69E7762F64BEAD00278492 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = RunningWidget/RunningWidget.entitlements;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
-				INFOPLIST_KEY_NSExtension_NSExtensionPrincipalClass = "$(PRODUCT_MODULE_NAME).RunningWidget";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				INFOPLIST_FILE = RunningWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RunningWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ben2.StravaRunning.RunningWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -534,11 +571,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A100000B00000000000000AB /* Build configuration list for PBXNativeTarget "RunningWidget" */ = {
+		CB69E7742F64BEAD00278492 /* Build configuration list for PBXNativeTarget "RunningWidget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A100000900000000000000A9 /* Debug */,
-				A100000A00000000000000AA /* Release */,
+				CB69E7752F64BEAD00278492 /* Debug */,
+				CB69E7762F64BEAD00278492 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
