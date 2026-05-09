@@ -7,6 +7,8 @@ interface Activity {
   start_date: string;
 }
 
+const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
 interface YearData {
   year: number;
   points: { day: number; cumKm: number }[];
@@ -34,6 +36,32 @@ function buildYearData(activities: Activity[], year: number): YearData {
     points.push({ day: dayOfYear(new Date(a.start_date)), cumKm });
   }
   return { year, points };
+}
+
+function RunsTable({ activities }: { activities: Activity[] }) {
+  const recentRuns = [...activities]
+    .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())
+    .slice(0, 10);
+
+  return (
+    <table class="runs-table">
+      <tbody>
+        {recentRuns.map((a) => {
+          const d = new Date(a.start_date);
+          const dateStr = `${monthNames[d.getUTCMonth()]} ${d.getUTCDate()}`;
+          const timeStr = `${d.getUTCHours().toString().padStart(2, "0")}:${d.getUTCMinutes().toString().padStart(2, "0")}`;
+          const distStr = `${(a.distance_meters / 1000).toFixed(1)}km`;
+          return (
+            <tr>
+              <td class="run-date">{dateStr}</td>
+              <td class="run-time">{timeStr}</td>
+              <td class="run-dist">{distStr}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
 }
 
 function Chart({ currentYear, yearsData, goal }: { currentYear: number; yearsData: YearData[]; goal: number }) {
@@ -180,8 +208,13 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
             <div class="value" style={`color:${deltaColor}`}>{deltaSign}{delta.toFixed(1)} km</div>
           </div>
         </div>
-        <div class="chart-container">
-          <Chart currentYear={currentYear} yearsData={yearsData} goal={goal} />
+        <div class="timeline-section">
+          <div class="runs-panel">
+            <RunsTable activities={activities} />
+          </div>
+          <div class="chart-container">
+            <Chart currentYear={currentYear} yearsData={yearsData} goal={goal} />
+          </div>
         </div>
         <div class="metrics-card">
           <table class="metrics-table">
@@ -202,6 +235,9 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
               <td class="metric-value">{weeklyKm.toFixed(1)} km</td>
             </tr>
           </table>
+        </div>
+        <div class="runs-card">
+          <RunsTable activities={activities} />
         </div>
         <div class="footer">
           <a href="/sync">Sync all activities</a>
