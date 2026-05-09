@@ -41,7 +41,7 @@ function buildYearData(activities: Activity[], year: number): YearData {
 function RunsTable({ activities }: { activities: Activity[] }) {
   const recentRuns = [...activities]
     .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())
-    .slice(0, 10);
+    .slice(0, 8);
 
   return (
     <table class="runs-table">
