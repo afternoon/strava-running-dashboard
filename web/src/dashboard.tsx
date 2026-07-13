@@ -1,3 +1,5 @@
+import { GOAL_KM } from "./constants";
+
 export type DashboardData =
   | { connected: false }
   | { connected: true; activities: Activity[] };
@@ -128,7 +130,7 @@ function Chart({ currentYear, yearsData, goal }: { currentYear: number; yearsDat
         color: colors[yr]?.color ?? "#888",
         dash: "",
       })),
-    { label: "Goal (1,100km)", color: "#999", dash: "6,4" },
+    { label: `Goal (${goal.toLocaleString()}km)`, color: "#999", dash: "6,4" },
   ];
 
   const lx = W - pad.right - 120;
@@ -159,7 +161,7 @@ function Chart({ currentYear, yearsData, goal }: { currentYear: number; yearsDat
 export function Dashboard({ activities }: { activities: Activity[] }) {
   const now = new Date();
   const currentYear = now.getFullYear();
-  const goal = 1100;
+  const goal = GOAL_KM;
 
   const thisYearActivities = activities.filter(
     (a) => new Date(a.start_date).getFullYear() === currentYear

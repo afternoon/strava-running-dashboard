@@ -1,6 +1,5 @@
 import type { RunningDashboard } from "./durable-object";
-
-const GOAL = 1100;
+import { GOAL_KM } from "./constants";
 
 function dayOfYear(date: Date): number {
   const start = new Date(date.getFullYear(), 0, 0);
@@ -53,7 +52,7 @@ async function resolveDashboard(
     0
   );
   const doy = dayOfYear(now);
-  const targetByToday = (GOAL * doy) / daysInYear(currentYear);
+  const targetByToday = (GOAL_KM * doy) / daysInYear(currentYear);
   const delta = distanceThisYear - targetByToday;
   const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const lastSevenDays = thisYear
@@ -78,7 +77,7 @@ async function resolveDashboard(
   });
 
   return {
-    goal: GOAL,
+    goal: GOAL_KM,
     metrics: { distanceThisYear, targetByToday, delta, lastSevenDays },
     chartData,
   };
