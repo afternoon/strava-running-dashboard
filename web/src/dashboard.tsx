@@ -233,8 +233,7 @@ function MonthlyChart({
     [currentYear - 2]: "x",
   };
 
-  const slotW = monthBandW / 3;
-  const barWidth = slotW * 0.6;
+  const barWidth = monthBandW * 0.4;
 
   const bars = monthlyByYear[currentYear].map((val, i) => {
     if (i > currentMonth || val <= 0) return null;
@@ -243,14 +242,12 @@ function MonthlyChart({
     return <rect x={cx - barWidth / 2} y={y(val)} width={barWidth} height={barH} fill={colors[currentYear]} rx="2" />;
   });
 
-  const scatterMarkers = priorYears.flatMap((yr, idx) => {
-    const offset = idx === 0 ? -slotW : slotW;
-    return monthlyByYear[yr].map((val, i) => {
+  const scatterMarkers = priorYears.flatMap((yr) =>
+    monthlyByYear[yr].map((val, i) => {
       if (val <= 0) return null;
-      const cx = bandX(i) + offset;
-      return <Marker shape={markerShapes[yr] ?? "circle"} cx={cx} cy={y(val)} color={colors[yr] ?? "#888"} />;
-    });
-  });
+      return <Marker shape={markerShapes[yr] ?? "circle"} cx={bandX(i)} cy={y(val)} color={colors[yr] ?? "#888"} />;
+    })
+  );
 
   const legendItems: { label: string; color: string; shape: "bar" | "circle" | "x" }[] = [
     { label: `${currentYear}`, color: colors[currentYear], shape: "bar" },
