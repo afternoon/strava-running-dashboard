@@ -40,6 +40,17 @@ function buildYearData(activities: Activity[], year: number): YearData {
   return { year, points };
 }
 
+function monthlyTotals(activities: Activity[], year: number): number[] {
+  const totals = new Array(12).fill(0);
+  for (const a of activities) {
+    const d = new Date(a.start_date);
+    if (d.getFullYear() === year) {
+      totals[d.getMonth()] += a.distance_meters / 1000;
+    }
+  }
+  return totals;
+}
+
 function RunsTable({ activities }: { activities: Activity[] }) {
   const recentRuns = [...activities]
     .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())
@@ -158,6 +169,129 @@ function Chart({ currentYear, yearsData, goal }: { currentYear: number; yearsDat
   );
 }
 
+function Marker({ shape, cx, cy, color }: { shape: "circle" | "x"; cx: number; cy: number; color: string }) {
+  if (shape === "circle") {
+    return <circle cx={cx} cy={cy} r="5" fill="none" stroke={color} stroke-width="2" />;
+  }
+  const s = 4.5;
+  return (
+    <>
+      <line x1={cx - s} y1={cy - s} x2={cx + s} y2={cy + s} stroke={color} stroke-width="2" stroke-linecap="round" />
+      <line x1={cx - s} y1={cy + s} x2={cx + s} y2={cy - s} stroke={color} stroke-width="2" stroke-linecap="round" />
+    </>
+  );
+}
+
+function MonthlyChart({
+  currentYear,
+  monthlyByYear,
+  currentMonth,
+}: {
+  currentYear: number;
+  monthlyByYear: Record<number, number[]>;
+  currentMonth: number;
+}) {
+  const W = 1000;
+  const H = 360;
+  const pad = { top: 50, right: 30, bottom: 40, left: 60 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  const years = Object.keys(monthlyByYear).map(Number);
+  const priorYears = years.filter((yr) => yr !== currentYear).sort((a, b) => a - b);
+
+  const allValues = years.flatMap((yr) => monthlyByYear[yr]);
+  const maxVal = Math.max(1, ...allValues);
+  const yMax = Math.ceil(maxVal / 25) * 25;
+
+  const monthBandW = plotW / 12;
+  const bandX = (i: number) => pad.left + i * monthBandW + monthBandW / 2;
+  const y = (km: number) => pad.top + plotH - (km / yMax) * plotH;
+
+  const yTicks = 4;
+  const gridLines = Array.from({ length: yTicks + 1 }, (_, i) => {
+    const val = (yMax / yTicks) * i;
+    const yPos = y(val);
+    return (
+      <>
+        <line x1={pad.left} y1={yPos} x2={W - pad.right} y2={yPos} stroke="#e0e0e0" stroke-width="1" />
+        <text x={pad.left - 8} y={yPos + 4} text-anchor="end" font-size="11" fill="#666">{Math.round(val)}</text>
+      </>
+    );
+  });
+
+  const xLabels = monthNames.map((month, i) => (
+    <text x={bandX(i)} y={H - 8} text-anchor="middle" font-size="11" fill="#666">{month}</text>
+  ));
+
+  const colors: Record<number, string> = { [currentYear]: "#FC4C02" };
+  if (priorYears.includes(currentYear - 1)) colors[currentYear - 1] = "#1a73e8";
+  if (priorYears.includes(currentYear - 2)) colors[currentYear - 2] = "#34a853";
+
+  const markerShapes: Record<number, "circle" | "x"> = {
+    [currentYear - 1]: "circle",
+    [currentYear - 2]: "x",
+  };
+
+  const slotW = monthBandW / 3;
+  const barWidth = slotW * 0.6;
+
+  const bars = monthlyByYear[currentYear].map((val, i) => {
+    if (i > currentMonth || val <= 0) return null;
+    const cx = bandX(i);
+    const barH = plotH - (y(val) - pad.top);
+    return <rect x={cx - barWidth / 2} y={y(val)} width={barWidth} height={barH} fill={colors[currentYear]} rx="2" />;
+  });
+
+  const scatterMarkers = priorYears.flatMap((yr, idx) => {
+    const offset = idx === 0 ? -slotW : slotW;
+    return monthlyByYear[yr].map((val, i) => {
+      if (val <= 0) return null;
+      const cx = bandX(i) + offset;
+      return <Marker shape={markerShapes[yr] ?? "circle"} cx={cx} cy={y(val)} color={colors[yr] ?? "#888"} />;
+    });
+  });
+
+  const legendItems: { label: string; color: string; shape: "bar" | "circle" | "x" }[] = [
+    { label: `${currentYear}`, color: colors[currentYear], shape: "bar" },
+    ...priorYears
+      .slice()
+      .reverse()
+      .map((yr) => ({ label: `${yr}`, color: colors[yr] ?? "#888", shape: markerShapes[yr] ?? "circle" })),
+  ];
+
+  const legendY = 20;
+  const legendGap = 100;
+  const legend = legendItems.map((item, i) => {
+    const lx = pad.left + i * legendGap;
+    const icon =
+      item.shape === "bar" ? (
+        <rect x={lx} y={legendY - 6} width="14" height="10" fill={item.color} rx="2" />
+      ) : (
+        <Marker shape={item.shape} cx={lx + 7} cy={legendY - 1} color={item.color} />
+      );
+    return (
+      <>
+        {icon}
+        <text x={lx + 20} y={legendY + 4} font-size="11" fill="#333">{item.label}</text>
+      </>
+    );
+  });
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+      <rect width={W} height={H} fill="white" rx="8" />
+      {gridLines}
+      {xLabels}
+      {bars}
+      {scatterMarkers}
+      {legend}
+      <line x1={pad.left} y1={pad.top} x2={pad.left} y2={H - pad.bottom} stroke="#ccc" stroke-width="1" />
+      <line x1={pad.left} y1={H - pad.bottom} x2={W - pad.right} y2={H - pad.bottom} stroke="#ccc" stroke-width="1" />
+    </svg>
+  );
+}
+
 export function Dashboard({ activities }: { activities: Activity[] }) {
   const now = new Date();
   const currentYear = now.getFullYear();
@@ -174,6 +308,9 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
 
   const years = [currentYear, currentYear - 1, currentYear - 2];
   const yearsData = years.map((yr) => buildYearData(activities, yr));
+
+  const monthlyByYear: Record<number, number[]> = {};
+  for (const yr of years) monthlyByYear[yr] = monthlyTotals(activities, yr);
 
   const deltaColor = delta >= 0 ? "#34a853" : "#d93025";
   const deltaSign = delta >= 0 ? "+" : "";
@@ -240,6 +377,10 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
         </div>
         <div class="runs-card">
           <RunsTable activities={activities} />
+        </div>
+        <div class="monthly-chart-container">
+          <h2 class="section-title">Monthly Distance</h2>
+          <MonthlyChart currentYear={currentYear} monthlyByYear={monthlyByYear} currentMonth={now.getMonth()} />
         </div>
         <div class="footer">
           <a href="/sync">Sync all activities</a>
