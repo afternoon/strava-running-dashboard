@@ -202,20 +202,26 @@ function MonthlyChart({
 
   const allValues = years.flatMap((yr) => monthlyByYear[yr]);
   const maxVal = Math.max(1, ...allValues);
-  const yMax = Math.ceil(maxVal / 25) * 25;
+  const Y_STEP = 10;
+  const yMax = Math.ceil(maxVal / Y_STEP) * Y_STEP;
 
   const monthBandW = plotW / 12;
   const bandX = (i: number) => pad.left + i * monthBandW + monthBandW / 2;
   const y = (km: number) => pad.top + plotH - (km / yMax) * plotH;
 
-  const yTicks = 4;
+  // Grid line every 10 km; thin out the labels when the ticks get too close to read.
+  const yTicks = yMax / Y_STEP;
+  const tickGap = plotH / yTicks;
+  const labelEvery = [1, 2, 5, 10].find((n) => tickGap * n >= 16) ?? 10;
   const gridLines = Array.from({ length: yTicks + 1 }, (_, i) => {
-    const val = (yMax / yTicks) * i;
+    const val = i * Y_STEP;
     const yPos = y(val);
     return (
       <>
         <line x1={pad.left} y1={yPos} x2={W - pad.right} y2={yPos} stroke="#e0e0e0" stroke-width="1" />
-        <text x={pad.left - 8} y={yPos + 4} text-anchor="end" font-size="11" fill="#666">{Math.round(val)}</text>
+        {i % labelEvery === 0 && (
+          <text x={pad.left - 8} y={yPos + 4} text-anchor="end" font-size="11" fill="#666">{val}</text>
+        )}
       </>
     );
   });
