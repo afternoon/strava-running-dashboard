@@ -27,7 +27,7 @@ body.dashboard h1 { font-size: 17px; margin-bottom: 8px; }
 /* Desktop - restore original layout */
 @media (min-width: 640px) {
   body.dashboard { padding: 24px; }
-  body.dashboard h1 { font-size: 24px; margin-bottom: 20px; }
+  body.dashboard h1 { font-size: 48px; margin-bottom: 20px; }
   .cards { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
   .card { background: white; border-radius: 8px; padding: 20px; flex: 1; min-width: 160px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
   .card .label { font-size: 13px; color: #666; margin-bottom: 4px; }
