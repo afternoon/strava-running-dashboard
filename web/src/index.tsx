@@ -13,13 +13,18 @@ function getStub(c: { env: Env }): DurableObjectStub<RunningDashboard> {
   return c.env.RUNNING_DASHBOARD.get(id);
 }
 
+// The dashboard is rendered from whatever the durable object holds right now,
+// so it must never be served from a cache — an iOS home-screen web app would
+// otherwise redisplay (and re-fetch) a stale copy when it is reopened.
+const NO_STORE = { "Cache-Control": "no-store" };
+
 app.get("/", async (c) => {
   const stub = getStub(c);
   const data = await stub.getDashboardData();
   if (!data.connected) {
-    return c.html(<ConnectPage />);
+    return c.html(<ConnectPage />, 200, NO_STORE);
   }
-  return c.html(<Dashboard activities={data.activities} />);
+  return c.html(<Dashboard activities={data.activities} />, 200, NO_STORE);
 });
 
 app.get("/webhook", (c) => {

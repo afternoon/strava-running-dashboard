@@ -333,6 +333,7 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Running Dashboard</title>
         <link rel="stylesheet" href="/styles.css" />
+        <script src="/refresh.js" defer></script>
       </head>
       <body class="dashboard">
         <h1>Running Dashboard {currentYear}</h1>
