@@ -14,12 +14,43 @@ export interface StravaActivity {
   type: string;
 }
 
+/**
+ * A non-2xx response from Strava, with the status kept so callers can tell a
+ * dead grant (the user has to reconnect) from a blip worth retrying.
+ */
+export class StravaApiError extends Error {
+  readonly status: number;
+  readonly body: string;
+
+  constructor(what: string, status: number, body: string) {
+    super(`${what} failed: ${status} ${body}`);
+    this.name = "StravaApiError";
+    this.status = status;
+    this.body = body;
+  }
+
+  /** The grant is gone — deauthorised, or the refresh token was superseded. */
+  get isAuthFailure(): boolean {
+    return this.status === 400 || this.status === 401;
+  }
+
+  get isNotFound(): boolean {
+    return this.status === 404;
+  }
+}
+
+async function stravaFetch(what: string, url: string, init?: RequestInit): Promise<Response> {
+  const res = await fetch(url, init);
+  if (!res.ok) throw new StravaApiError(what, res.status, await res.text());
+  return res;
+}
+
 export async function exchangeToken(
   code: string,
   clientId: string,
   clientSecret: string
 ): Promise<TokenData> {
-  const res = await fetch("https://www.strava.com/oauth/token", {
+  const res = await stravaFetch("Token exchange", "https://www.strava.com/oauth/token", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -29,7 +60,6 @@ export async function exchangeToken(
       grant_type: "authorization_code",
     }),
   });
-  if (!res.ok) throw new Error(`Token exchange failed: ${res.status} ${await res.text()}`);
   const data = (await res.json()) as {
     athlete: { id: number };
     access_token: string;
@@ -49,7 +79,7 @@ export async function refreshToken(
   clientId: string,
   clientSecret: string
 ): Promise<TokenData> {
-  const res = await fetch("https://www.strava.com/oauth/token", {
+  const res = await stravaFetch("Token refresh", "https://www.strava.com/oauth/token", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -59,7 +89,6 @@ export async function refreshToken(
       grant_type: "refresh_token",
     }),
   });
-  if (!res.ok) throw new Error(`Token refresh failed: ${res.status} ${await res.text()}`);
   const data = (await res.json()) as {
     access_token: string;
     refresh_token: string;
@@ -73,41 +102,15 @@ export async function refreshToken(
   };
 }
 
-export async function getValidAccessToken(
-  sql: SqlStorage,
-  clientId: string,
-  clientSecret: string
-): Promise<string> {
-  const row = sql
-    .exec("SELECT access_token, refresh_token, expires_at FROM tokens WHERE id = 1")
-    .toArray()[0] as { access_token: string; refresh_token: string; expires_at: number } | undefined;
-
-  if (!row) throw new Error("No tokens stored");
-
-  const now = Math.floor(Date.now() / 1000);
-  if (row.expires_at > now + 60) {
-    return row.access_token;
-  }
-
-  const refreshed = await refreshToken(row.refresh_token, clientId, clientSecret);
-  sql.exec(
-    "UPDATE tokens SET access_token = ?, refresh_token = ?, expires_at = ? WHERE id = 1",
-    refreshed.access_token,
-    refreshed.refresh_token,
-    refreshed.expires_at
-  );
-  return refreshed.access_token;
-}
-
 export async function fetchActivity(
   activityId: number,
   accessToken: string
 ): Promise<StravaActivity> {
-  const res = await fetch(
+  const res = await stravaFetch(
+    "Fetch activity",
     `https://www.strava.com/api/v3/activities/${activityId}`,
     { headers: { Authorization: `Bearer ${accessToken}` } }
   );
-  if (!res.ok) throw new Error(`Fetch activity failed: ${res.status} ${await res.text()}`);
   return (await res.json()) as StravaActivity;
 }
 
@@ -118,17 +121,15 @@ export interface WebhookSubscription {
   updated_at: string;
 }
 
-export async function getWebhookSubscription(
+export async function listWebhookSubscriptions(
   clientId: string,
   clientSecret: string
-): Promise<WebhookSubscription | null> {
+): Promise<WebhookSubscription[]> {
   const url = new URL("https://www.strava.com/api/v3/push_subscriptions");
   url.searchParams.set("client_id", clientId);
   url.searchParams.set("client_secret", clientSecret);
-  const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`Get webhook subscription failed: ${res.status} ${await res.text()}`);
-  const data = (await res.json()) as WebhookSubscription[];
-  return data.length > 0 ? data[0] : null;
+  const res = await stravaFetch("List webhook subscriptions", url.toString());
+  return (await res.json()) as WebhookSubscription[];
 }
 
 export async function createWebhookSubscription(
@@ -137,38 +138,55 @@ export async function createWebhookSubscription(
   callbackUrl: string,
   verifyToken: string
 ): Promise<WebhookSubscription> {
-  const res = await fetch("https://www.strava.com/api/v3/push_subscriptions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      client_id: clientId,
-      client_secret: clientSecret,
-      callback_url: callbackUrl,
-      verify_token: verifyToken,
-    }),
-  });
-  if (!res.ok) throw new Error(`Create webhook subscription failed: ${res.status} ${await res.text()}`);
+  const res = await stravaFetch(
+    "Create webhook subscription",
+    "https://www.strava.com/api/v3/push_subscriptions",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: clientId,
+        client_secret: clientSecret,
+        callback_url: callbackUrl,
+        verify_token: verifyToken,
+      }),
+    }
+  );
   return (await res.json()) as WebhookSubscription;
 }
+
+export async function deleteWebhookSubscription(
+  id: number,
+  clientId: string,
+  clientSecret: string
+): Promise<void> {
+  const url = new URL(`https://www.strava.com/api/v3/push_subscriptions/${id}`);
+  url.searchParams.set("client_id", clientId);
+  url.searchParams.set("client_secret", clientSecret);
+  await stravaFetch("Delete webhook subscription", url.toString(), { method: "DELETE" });
+}
+
+// Strava caps per_page at 200. The page cap is a backstop: without it a bug in
+// Strava's paging (or an unexpected response shape) would spin forever and
+// burn the worker's subrequest budget.
+const PER_PAGE = 200;
+const MAX_PAGES = 30;
 
 export async function fetchActivitiesAfter(
   afterEpoch: number,
   accessToken: string
 ): Promise<StravaActivity[]> {
   const all: StravaActivity[] = [];
-  let page = 1;
-  const perPage = 200;
 
-  while (true) {
-    const res = await fetch(
-      `https://www.strava.com/api/v3/athlete/activities?after=${afterEpoch}&page=${page}&per_page=${perPage}`,
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    const res = await stravaFetch(
+      "Fetch activities",
+      `https://www.strava.com/api/v3/athlete/activities?after=${afterEpoch}&page=${page}&per_page=${PER_PAGE}`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
-    if (!res.ok) throw new Error(`Fetch activities failed: ${res.status} ${await res.text()}`);
     const batch = (await res.json()) as StravaActivity[];
     all.push(...batch);
-    if (batch.length < perPage) break;
-    page++;
+    if (batch.length < PER_PAGE) break;
   }
 
   return all;

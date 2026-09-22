@@ -49,3 +49,19 @@ body.connect h1 { margin-bottom: 16px; font-size: 2em; }
 p { color: #666; margin-bottom: 24px; }
 a.btn { display: inline-block; background: #FC4C02; color: white; text-decoration: none; padding: 12px 32px; border-radius: 6px; font-weight: 600; }
 a.btn:hover { background: #e04400; }
+
+body.status { padding: 16px; }
+.status-page { max-width: 680px; margin: 0 auto; background: white; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.status-page h1 { font-size: 18px; margin-bottom: 12px; }
+.status-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.status-table tr + tr { border-top: 1px solid #f0f0f0; }
+.status-label { color: #666; padding: 6px 8px 6px 0; white-space: nowrap; vertical-align: top; }
+.status-value { text-align: right; font-weight: 600; padding: 6px 0; word-break: break-word; }
+.status-value.bad { color: #c0392b; }
+.status-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.status-actions a.btn { padding: 10px 16px; font-size: 13px; }
+.status-result { font-size: 15px; font-weight: 600; }
+.status-result.bad { color: #c0392b; }
+.status-detail { font-size: 12px; color: #666; white-space: pre-wrap; word-break: break-word; background: #f7f7f7; border-radius: 6px; padding: 8px; }
+.status-note { font-size: 12px; color: #999; margin-top: 12px; }
+.status-note a { color: #666; }
