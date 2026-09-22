@@ -387,7 +387,7 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
           <MonthlyChart currentYear={currentYear} monthlyByYear={monthlyByYear} currentMonth={now.getMonth()} />
         </div>
         <div class="footer">
-          <a href="/sync">Sync all activities</a>
+          <a href="/sync">Sync all activities</a> · <a href="/status">Status</a>
         </div>
       </body>
     </html>
