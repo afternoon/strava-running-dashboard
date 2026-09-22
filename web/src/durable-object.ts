@@ -51,6 +51,9 @@ export const FULL_SYNC_DAYS = 3 * 365;
 // response is wrong rather than history. See syncSince.
 const MAX_PRUNE_CANDIDATES = 25;
 
+// How stale the local copy may get before a page load kicks off a reconcile.
+const RECONCILE_MAX_AGE_MS = 30 * 60 * 1000;
+
 export class RunningDashboard extends DurableObject<Env> {
   private sql: SqlStorage;
 
@@ -58,6 +61,10 @@ export class RunningDashboard extends DurableObject<Env> {
   // replacement, so two refreshes racing each other can leave us storing the
   // loser's token — which is already dead. Every caller shares one refresh.
   private refreshInFlight: Promise<string> | null = null;
+
+  // Likewise for reconciles: opening the dashboard in three tabs must start
+  // one sync, not three.
+  private reconcileInFlight: Promise<void> | null = null;
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
@@ -404,12 +411,35 @@ export class RunningDashboard extends DurableObject<Env> {
   }
 
   /**
-   * The safety net behind the webhook: re-pull the recent window on a
-   * schedule so a dropped, failed or unsubscribed webhook event self-heals
-   * without anyone noticing the dashboard had gone stale.
+   * The safety net behind the webhook: re-pull the recent window when the
+   * dashboard is opened and the local copy has gone stale, so a dropped,
+   * failed or unsubscribed event heals itself rather than leaving the
+   * dashboard quietly frozen.
+   *
+   * Callers run this after responding, so it must never make them wait on it
+   * or on each other: concurrent loads share one reconcile, and the attempt
+   * is timestamped before the sync rather than after, so a sync that keeps
+   * failing retries every half hour instead of on every single page load.
    */
-  async reconcile(): Promise<SyncResult | null> {
-    if (!this.hasToken()) return null;
-    return this.runSync(RECONCILE_DAYS, "scheduled reconcile");
+  async reconcileIfStale(): Promise<void> {
+    if (!this.hasToken()) return;
+    if (this.reconcileInFlight) return this.reconcileInFlight;
+
+    const lastAttempt = this.getMeta("last_reconcile_attempt_at");
+    if (lastAttempt) {
+      const age = Date.now() - new Date(lastAttempt).getTime();
+      if (Number.isFinite(age) && age >= 0 && age < RECONCILE_MAX_AGE_MS) return;
+    }
+    this.setMeta("last_reconcile_attempt_at", new Date().toISOString());
+
+    this.reconcileInFlight = this.runSync(RECONCILE_DAYS, "background reconcile")
+      .then(() => undefined)
+      .catch((err: unknown) => {
+        console.error("background reconcile failed", err);
+      })
+      .finally(() => {
+        this.reconcileInFlight = null;
+      });
+    return this.reconcileInFlight;
   }
 }

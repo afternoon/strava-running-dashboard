@@ -136,8 +136,9 @@ export function StatusPage(props: { status: StatusData; webhook: WebhookStatus }
         </a>
       </div>
       <p class="status-note">
-        A scheduled job re-checks Strava regularly, so a missed webhook catches up on its
-        own — these buttons are for when you don't want to wait.
+        Opening the dashboard re-checks Strava when the local copy is more than half an
+        hour old, so a missed webhook catches up on its own — these buttons are for when
+        you don't want to wait.
       </p>
       <p class="status-note">
         <a href="/">Back to dashboard</a>

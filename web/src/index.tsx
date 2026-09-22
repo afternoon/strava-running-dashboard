@@ -58,6 +58,10 @@ app.get("/", async (c) => {
   if (!data.connected) {
     return c.html(<ConnectPage />, 200, NO_STORE);
   }
+  // Heal a missed webhook event in the background. This page still renders
+  // from the copy we already have — the point is that the next load is right,
+  // rather than the dashboard sitting stale until someone investigates.
+  c.executionCtx.waitUntil(stub.reconcileIfStale());
   return c.html(<Dashboard activities={data.activities} />, 200, NO_STORE);
 });
 
@@ -77,7 +81,7 @@ app.post("/webhook", async (c) => {
   const stub = getStub(c);
   // Strava drops the delivery if we take longer than two seconds, so the work
   // happens after the response. handleWebhookEvent swallows and records its
-  // own failures; anything it misses is picked up by the scheduled reconcile.
+  // own failures; anything it misses is picked up by the next reconcile.
   c.executionCtx.waitUntil(stub.handleWebhookEvent(body));
   return c.text("OK", 200);
 });
@@ -224,25 +228,13 @@ app.get("/sync", async (c) => {
 // Set DASHBOARD_API_KEY secret to require Bearer token authentication.
 app.all("/graphql", async (c) => {
   const stub = getStub(c);
-  return handleGraphQL(c.req.raw, stub, c.env.DASHBOARD_API_KEY);
+  const response = await handleGraphQL(c.req.raw, stub, c.env.DASHBOARD_API_KEY);
+  // The iOS app and widget poll this, so they keep the same backstop running
+  // even when the web dashboard goes unopened for days.
+  c.executionCtx.waitUntil(stub.reconcileIfStale());
+  return response;
 });
 
 export { RunningDashboard };
 
-export default {
-  fetch: app.fetch,
-
-  // The webhook is best-effort: Strava does not retry a delivery we fail to
-  // process, and a subscription can disappear without warning. This re-pulls
-  // the recent window on a schedule so the dashboard heals itself instead of
-  // silently freezing.
-  async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext) {
-    const id = env.RUNNING_DASHBOARD.idFromName("dashboard");
-    const stub = env.RUNNING_DASHBOARD.get(id);
-    ctx.waitUntil(
-      stub.reconcile().catch((err: unknown) => {
-        console.error("scheduled reconcile failed", err);
-      })
-    );
-  },
-} satisfies ExportedHandler<Env>;
+export default app;
