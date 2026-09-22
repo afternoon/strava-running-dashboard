@@ -1,6 +1,7 @@
 import { DurableObject } from "cloudflare:workers";
 import {
   StravaApiError,
+  describeError,
   exchangeToken,
   fetchActivitiesAfter,
   fetchActivity,
@@ -38,6 +39,16 @@ export interface StatusData {
 }
 
 const DAY_SECONDS = 24 * 60 * 60;
+
+/**
+ * Workers RPC flattens a custom error class into a plain Error, so by the time
+ * a failure reaches the worker it can no longer be asked what it was — which
+ * is how an inactive Strava application ended up on screen as a raw 403 body.
+ * Translate it here, while the type is still intact.
+ */
+function forRpc(err: unknown): unknown {
+  return err instanceof StravaApiError ? new Error(describeError(err)) : err;
+}
 
 // How far back a reconcile looks. Wide enough that a run uploaded while the
 // webhook was broken is still picked up days later, narrow enough to stay one
@@ -231,11 +242,16 @@ export class RunningDashboard extends DurableObject<Env> {
   }
 
   async handleOAuthCallback(code: string): Promise<void> {
-    const token = await exchangeToken(
-      code,
-      this.env.STRAVA_CLIENT_ID,
-      this.env.STRAVA_CLIENT_SECRET
-    );
+    let token;
+    try {
+      token = await exchangeToken(
+        code,
+        this.env.STRAVA_CLIENT_ID,
+        this.env.STRAVA_CLIENT_SECRET
+      );
+    } catch (err) {
+      throw forRpc(err);
+    }
 
     this.sql.exec(
       `INSERT INTO tokens (id, athlete_id, access_token, refresh_token, expires_at)
@@ -321,9 +337,8 @@ export class RunningDashboard extends DurableObject<Env> {
       // Strava does not usefully retry, and this runs in a waitUntil where a
       // throw would be invisible. Record it and let the scheduled reconcile
       // pick the activity up instead.
-      const message = err instanceof Error ? err.message : String(err);
-      console.error("webhook event failed", message);
-      this.setMeta("last_webhook_error", message);
+      console.error("webhook event failed", err);
+      this.setMeta("last_webhook_error", describeError(err));
     }
   }
 
@@ -393,10 +408,9 @@ export class RunningDashboard extends DurableObject<Env> {
       this.setMeta("last_sync_error", null);
       return result;
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      this.setMeta("last_sync_error", `${label}: ${message}`);
+      this.setMeta("last_sync_error", `${label}: ${describeError(err)}`);
       this.setMeta("last_sync_at", new Date().toISOString());
-      throw err;
+      throw forRpc(err);
     }
   }
 
