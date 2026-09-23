@@ -37,6 +37,41 @@ export class StravaApiError extends Error {
   get isNotFound(): boolean {
     return this.status === 404;
   }
+
+  /**
+   * Strava deactivates an API application when the account that owns it has
+   * no active Strava subscription, and then answers every data endpoint with
+   * this 403 while OAuth and token refresh keep working normally. That
+   * combination reads as a token problem and is not one, so it is worth
+   * naming rather than showing the raw response.
+   */
+  get isApplicationInactive(): boolean {
+    if (this.status !== 403) return false;
+    try {
+      const parsed = JSON.parse(this.body) as {
+        errors?: { resource?: string; code?: string }[];
+      };
+      return (parsed.errors ?? []).some(
+        (e) => e.resource === "Application" && e.code === "Inactive"
+      );
+    } catch {
+      return false;
+    }
+  }
+}
+
+export const APPLICATION_INACTIVE_MESSAGE =
+  "Your Strava API application is inactive, so Strava is refusing every data " +
+  "request even though signing in still works. The account that owns the " +
+  "application needs an active Strava subscription; reactivate the app at " +
+  "https://www.strava.com/settings/api.";
+
+/** The message to show a human for a failure that came back from Strava. */
+export function describeError(err: unknown): string {
+  if (err instanceof StravaApiError && err.isApplicationInactive) {
+    return APPLICATION_INACTIVE_MESSAGE;
+  }
+  return err instanceof Error ? err.message : String(err);
 }
 
 async function stravaFetch(what: string, url: string, init?: RequestInit): Promise<Response> {

@@ -6,6 +6,7 @@ import type { WebhookStatus } from "./status";
 import {
   createWebhookSubscription,
   deleteWebhookSubscription,
+  describeError,
   listWebhookSubscriptions,
 } from "./strava";
 import { handleGraphQL } from "./graphql";
@@ -28,23 +29,19 @@ function callbackUrl(requestUrl: string): string {
   return new URL("/webhook", requestUrl).toString();
 }
 
-function errorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : String(err);
-}
-
 // Hono's default handler answers with a bare "Internal Server Error", which is
 // exactly what made this hard to diagnose: /sync failing on a dead Strava
 // token looked identical to the worker being broken. Show the reason.
 app.onError((err, c) => {
   console.error("request failed", c.req.method, c.req.path, err);
   if (c.req.path === "/graphql") {
-    return c.json({ errors: [{ message: errorMessage(err) }] }, 500);
+    return c.json({ errors: [{ message: describeError(err) }] }, 500);
   }
   return c.html(
     <ResultPage
       title="Something went wrong"
       message={`${c.req.method} ${c.req.path} failed.`}
-      detail={errorMessage(err)}
+      detail={describeError(err)}
       ok={false}
     />,
     500,
@@ -168,7 +165,7 @@ app.get("/status", async (c) => {
       c.env.STRAVA_CLIENT_SECRET
     );
   } catch (err) {
-    webhook.error = errorMessage(err);
+    webhook.error = describeError(err);
   }
 
   return c.html(<StatusPage status={status} webhook={webhook} />, 200, NO_STORE);
