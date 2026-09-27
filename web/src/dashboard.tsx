@@ -1,4 +1,5 @@
 import { GOAL_KM } from "./constants";
+import { SERIES } from "./theme";
 
 export type DashboardData =
   | { connected: false }
@@ -100,71 +101,69 @@ function Chart({ currentYear, yearsData, goal }: { currentYear: number; yearsDat
     const yPos = y(val);
     return (
       <>
-        <line x1={pad.left} y1={yPos} x2={W - pad.right} y2={yPos} stroke="#e0e0e0" stroke-width="1" />
-        <text x={pad.left - 8} y={yPos + 4} text-anchor="end" font-size="11" fill="#666">{Math.round(val)}</text>
+        <line x1={pad.left} y1={yPos} x2={W - pad.right} y2={yPos} class="chart-grid" stroke-width="1" />
+        <text x={pad.left - 8} y={yPos + 4} text-anchor="end" font-size="11" class="chart-axis-label">{Math.round(val)}</text>
       </>
     );
   });
 
   const xLabels = months.map((month, i) => {
     const mid = (monthDays[i] + monthDays[i + 1]) / 2;
-    return <text x={x(mid)} y={H - 8} text-anchor="middle" font-size="11" fill="#666">{month}</text>;
+    return <text x={x(mid)} y={H - 8} text-anchor="middle" font-size="11" class="chart-axis-label">{month}</text>;
   });
 
   const colors: Record<number, { color: string; width: number; opacity: number }> = {};
   const sortedYears = yearsData.map((yd) => yd.year).sort();
   for (const yr of sortedYears) {
     if (yr === currentYear) {
-      colors[yr] = { color: "#FC4C02", width: 2.5, opacity: 1 };
+      colors[yr] = { color: SERIES.current, width: 2.5, opacity: 1 };
     } else if (yr === currentYear - 1) {
-      colors[yr] = { color: "#1a73e8", width: 1.5, opacity: 0.7 };
+      colors[yr] = { color: SERIES.lastYear, width: 1.5, opacity: 0.7 };
     } else {
-      colors[yr] = { color: "#34a853", width: 1.5, opacity: 0.7 };
+      colors[yr] = { color: SERIES.older, width: 1.5, opacity: 0.7 };
     }
   }
 
   const yearLines = yearsData
     .filter((yd) => yd.points.length >= 2)
     .map((yd) => {
-      const c = colors[yd.year] ?? { color: "#888", width: 1, opacity: 0.5 };
+      const c = colors[yd.year] ?? { color: SERIES.fallback, width: 1, opacity: 0.5 };
       const d = yd.points.map((p, i) => `${i === 0 ? "M" : "L"}${x(p.day).toFixed(1)},${y(p.cumKm).toFixed(1)}`).join(" ");
       return <path d={d} fill="none" stroke={c.color} stroke-width={c.width} opacity={c.opacity} />;
     });
 
   const legendItems = [
-    { label: `${currentYear}`, color: "#FC4C02", dash: "" },
+    { label: `${currentYear}`, color: SERIES.current, dash: "" },
     ...sortedYears
       .filter((yr) => yr !== currentYear)
       .reverse()
       .map((yr) => ({
         label: `${yr}`,
-        color: colors[yr]?.color ?? "#888",
+        color: colors[yr]?.color ?? SERIES.fallback,
         dash: "",
       })),
-    { label: `Goal (${goal.toLocaleString()}km)`, color: "#999", dash: "6,4" },
+    { label: `Goal (${goal.toLocaleString()}km)`, color: SERIES.goal, dash: "6,4" },
   ];
 
-  const lx = W - pad.right - 120;
+  // Top-left is always empty: every line starts at zero in the bottom-left.
+  const lx = pad.left + 20;
   const legend = legendItems.map((item, i) => {
     const ly = pad.top + 10 + i * 18;
     return (
       <>
         <line x1={lx} y1={ly} x2={lx + 20} y2={ly} stroke={item.color} stroke-width="2" stroke-dasharray={item.dash || undefined} />
-        <text x={lx + 26} y={ly + 4} font-size="11" fill="#333">{item.label}</text>
+        <text x={lx + 26} y={ly + 4} font-size="11" class="chart-legend-label">{item.label}</text>
       </>
     );
   });
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-      <rect width={W} height={H} fill="white" rx="8" />
       {gridLines}
       {xLabels}
-      <line x1={x(0)} y1={y(0)} x2={x(365)} y2={y(goal)} stroke="#999" stroke-width="1.5" stroke-dasharray="6,4" />
+      <line x1={x(0)} y1={y(0)} x2={x(365)} y2={y(goal)} stroke={SERIES.goal} stroke-width="1.5" stroke-dasharray="6,4" />
       {yearLines}
       {legend}
-      <line x1={pad.left} y1={pad.top} x2={pad.left} y2={H - pad.bottom} stroke="#ccc" stroke-width="1" />
-      <line x1={pad.left} y1={H - pad.bottom} x2={W - pad.right} y2={H - pad.bottom} stroke="#ccc" stroke-width="1" />
     </svg>
   );
 }
@@ -218,21 +217,21 @@ function MonthlyChart({
     const yPos = y(val);
     return (
       <>
-        <line x1={pad.left} y1={yPos} x2={W - pad.right} y2={yPos} stroke="#e0e0e0" stroke-width="1" />
+        <line x1={pad.left} y1={yPos} x2={W - pad.right} y2={yPos} class="chart-grid" stroke-width="1" />
         {i % labelEvery === 0 && (
-          <text x={pad.left - 8} y={yPos + 4} text-anchor="end" font-size="11" fill="#666">{val}</text>
+          <text x={pad.left - 8} y={yPos + 4} text-anchor="end" font-size="11" class="chart-axis-label">{val}</text>
         )}
       </>
     );
   });
 
   const xLabels = monthNames.map((month, i) => (
-    <text x={bandX(i)} y={H - 8} text-anchor="middle" font-size="11" fill="#666">{month}</text>
+    <text x={bandX(i)} y={H - 8} text-anchor="middle" font-size="11" class="chart-axis-label">{month}</text>
   ));
 
-  const colors: Record<number, string> = { [currentYear]: "#FC4C02" };
-  if (priorYears.includes(currentYear - 1)) colors[currentYear - 1] = "#1a73e8";
-  if (priorYears.includes(currentYear - 2)) colors[currentYear - 2] = "#34a853";
+  const colors: Record<number, string> = { [currentYear]: SERIES.current };
+  if (priorYears.includes(currentYear - 1)) colors[currentYear - 1] = SERIES.lastYear;
+  if (priorYears.includes(currentYear - 2)) colors[currentYear - 2] = SERIES.older;
 
   const markerShapes: Record<number, "circle" | "x"> = {
     [currentYear - 1]: "circle",
@@ -251,7 +250,7 @@ function MonthlyChart({
   const scatterMarkers = priorYears.flatMap((yr) =>
     monthlyByYear[yr].map((val, i) => {
       if (val <= 0) return null;
-      return <Marker shape={markerShapes[yr] ?? "circle"} cx={bandX(i)} cy={y(val)} color={colors[yr] ?? "#888"} />;
+      return <Marker shape={markerShapes[yr] ?? "circle"} cx={bandX(i)} cy={y(val)} color={colors[yr] ?? SERIES.fallback} />;
     })
   );
 
@@ -260,7 +259,7 @@ function MonthlyChart({
     ...priorYears
       .slice()
       .reverse()
-      .map((yr) => ({ label: `${yr}`, color: colors[yr] ?? "#888", shape: markerShapes[yr] ?? "circle" })),
+      .map((yr) => ({ label: `${yr}`, color: colors[yr] ?? SERIES.fallback, shape: markerShapes[yr] ?? "circle" })),
   ];
 
   const legendY = 20;
@@ -276,21 +275,18 @@ function MonthlyChart({
     return (
       <>
         {icon}
-        <text x={lx + 20} y={legendY + 4} font-size="11" fill="#333">{item.label}</text>
+        <text x={lx + 20} y={legendY + 4} font-size="11" class="chart-legend-label">{item.label}</text>
       </>
     );
   });
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-      <rect width={W} height={H} fill="white" rx="8" />
       {gridLines}
       {xLabels}
       {bars}
       {scatterMarkers}
       {legend}
-      <line x1={pad.left} y1={pad.top} x2={pad.left} y2={H - pad.bottom} stroke="#ccc" stroke-width="1" />
-      <line x1={pad.left} y1={H - pad.bottom} x2={W - pad.right} y2={H - pad.bottom} stroke="#ccc" stroke-width="1" />
     </svg>
   );
 }
@@ -315,7 +311,8 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
   const monthlyByYear: Record<number, number[]> = {};
   for (const yr of years) monthlyByYear[yr] = monthlyTotals(activities, yr);
 
-  const deltaColor = delta >= 0 ? "#34a853" : "#d93025";
+  
+  const deltaClass = delta >= 0 ? "delta-good" : "delta-bad";
   const deltaSign = delta >= 0 ? "+" : "";
 
   const weeklyKm = thisYearActivities
@@ -348,7 +345,7 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
           </div>
           <div class="card">
             <div class="label">Delta</div>
-            <div class="value" style={`color:${deltaColor}`}>{deltaSign}{delta.toFixed(1)} km</div>
+            <div class={`value ${deltaClass}`}>{deltaSign}{delta.toFixed(1)} km</div>
           </div>
         </div>
         <div class="timeline-section">
@@ -371,7 +368,7 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
             </tr>
             <tr>
               <td class="metric-label">Delta</td>
-              <td class="metric-value" style={`color:${deltaColor}`}>{deltaSign}{delta.toFixed(1)} km</td>
+              <td class={`metric-value ${deltaClass}`}>{deltaSign}{delta.toFixed(1)} km</td>
             </tr>
             <tr>
               <td class="metric-label">Last 7 days</td>
