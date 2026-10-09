@@ -33,18 +33,18 @@ body.dashboard h1::before { content: "~/"; color: var(--accent); }
 .timeline-section { margin-bottom: 8px; }
 .runs-panel { display: none; }
 .chart-container { background: var(--panel); padding: 8px 4px; }
-.metrics-card { background: var(--panel); padding: 8px 16px; }
+.metrics-card { background: var(--panel); padding: 6px 12px; }
 .metrics-table { width: 100%; border-collapse: collapse; }
-.metric-label { font-size: 15px; color: var(--fg-muted); padding: 10px 0; text-transform: lowercase; }
-.metric-value { font-size: 26px; font-weight: 700; text-align: right; padding: 10px 0; }
-.runs-card { background: var(--panel); padding: 8px 12px; margin-top: 8px; }
-.runs-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.metric-label { font-size: 12px; color: var(--fg-muted); padding: 3px 0; text-transform: lowercase; }
+.metric-value { font-size: 18px; font-weight: 700; text-align: right; padding: 3px 0; }
+.runs-card { background: var(--panel); padding: 6px 12px; margin-top: 8px; }
+.runs-table { width: 100%; border-collapse: collapse; font-size: 11px; }
 .runs-table tr:nth-child(even) td { background: var(--panel-alt); }
 .runs-table td:first-child { padding-left: 6px; }
 .runs-table td:last-child { padding-right: 6px; }
-.run-date { color: var(--fg); padding: 5px 0; }
-.run-time { color: var(--fg-faint); padding: 5px 6px; }
-.run-dist { text-align: right; font-weight: 600; color: var(--accent); padding: 5px 0; }
+.run-date { color: var(--fg); padding: 3px 0; }
+.run-time { color: var(--fg-faint); padding: 3px 6px; }
+.run-dist { text-align: right; font-weight: 600; color: var(--accent); padding: 3px 0; }
 .delta-good { color: var(--good); }
 .delta-bad { color: var(--bad); }
 .footer { margin-top: 10px; font-size: 12px; color: var(--fg-faint); text-align: center; }
@@ -63,6 +63,8 @@ body.dashboard h1::before { content: "~/"; color: var(--accent); }
   .card .value { font-size: 3.5em; font-weight: 700; padding: 0.5em 0 0.25em; letter-spacing: -0.02em; }
   .timeline-section { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 0; }
   .runs-panel { display: block; flex: 0 0 20%; background: var(--panel); padding: 12px; }
+  .runs-table { font-size: 12px; }
+  .run-date, .run-time, .run-dist { padding-top: 5px; padding-bottom: 5px; }
   .chart-container { flex: 1; padding: 16px; margin-bottom: 0; }
   .metrics-card { display: none; }
   .runs-card { display: none; }
