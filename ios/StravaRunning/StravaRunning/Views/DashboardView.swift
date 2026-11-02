@@ -15,7 +15,7 @@ struct DashboardView: View {
                 .padding()
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("Running \(Calendar.current.component(.year, from: Date()))")
+            .navigationTitle("Running")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
