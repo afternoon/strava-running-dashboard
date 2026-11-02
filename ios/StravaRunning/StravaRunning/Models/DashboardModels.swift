@@ -8,6 +8,8 @@ struct DashboardData: Decodable {
     let goal: Double
     let metrics: Metrics
     let chartData: [YearData]
+    let recentRuns: [RecentRun]
+    let monthlyData: [MonthlyData]
 }
 
 struct Metrics: Decodable {
@@ -29,4 +31,19 @@ struct DataPoint: Decodable, Identifiable {
     let cumulativeKm: Double
 
     var id: Int { dayOfYear }
+}
+
+struct RecentRun: Decodable, Identifiable {
+    let startDate: String
+    let distanceKm: Double
+
+    var id: String { startDate }
+}
+
+struct MonthlyData: Decodable, Identifiable {
+    let year: Int
+    /// Total km for each month, index 0 = January.
+    let totals: [Double]
+
+    var id: Int { year }
 }

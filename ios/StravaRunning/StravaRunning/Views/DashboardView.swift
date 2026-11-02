@@ -7,14 +7,20 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 16) {
-                    MetricsView(metrics: data.metrics, goal: data.goal)
+            TabView {
+                dashboardTab(title: "Progress", systemImage: "chart.xyaxis.line") {
+                    MetricsView(metrics: data.metrics)
                     RunChartView(chartData: data.chartData, goal: data.goal)
                 }
-                .padding()
+
+                dashboardTab(title: "Runs", systemImage: "list.bullet") {
+                    RecentRunsView(runs: data.recentRuns)
+                }
+
+                dashboardTab(title: "Monthly", systemImage: "chart.bar") {
+                    MonthlyChartView(monthlyData: data.monthlyData)
+                }
             }
-            .background(Color(.systemGroupedBackground))
             .navigationTitle("Running")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -36,8 +42,24 @@ struct DashboardView: View {
                     .disabled(appState.isLoading)
                 }
             }
-            .refreshable { await appState.reloadDashboard() }
             .sheet(isPresented: $showSettings) { SettingsView() }
         }
+    }
+
+    /// A scrollable, pull-to-refresh tab page with the shared grouped background.
+    private func dashboardTab<Content: View>(
+        title: String,
+        systemImage: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                content()
+            }
+            .padding()
+        }
+        .background(Color(.systemGroupedBackground))
+        .refreshable { await appState.reloadDashboard() }
+        .tabItem { Label(title, systemImage: systemImage) }
     }
 }

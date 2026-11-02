@@ -1,14 +1,11 @@
 import SwiftUI
 import Charts
 
-struct RunChartView: View {
-    let chartData: [YearData]
-    let goal: Double
+/// Colour palette matching the web dashboard, shared by the yearly and monthly charts.
+enum YearPalette {
+    static var currentYear: Int { Calendar.current.component(.year, from: Date()) }
 
-    private var currentYear: Int { Calendar.current.component(.year, from: Date()) }
-
-    // Colour palette matching the web dashboard.
-    private func color(for year: Int) -> Color {
+    static func color(for year: Int) -> Color {
         switch year {
         case currentYear:     return Color(red: 0.99, green: 0.30, blue: 0.01) // Strava orange
         case currentYear - 1: return Color(red: 0.10, green: 0.45, blue: 0.91) // blue
@@ -17,7 +14,29 @@ struct RunChartView: View {
         }
     }
 
+    static let goal = Color.gray.opacity(0.6)
+}
+
+struct RunChartView: View {
+    let chartData: [YearData]
+    let goal: Double
+
+    private var currentYear: Int { YearPalette.currentYear }
+
+    private func color(for year: Int) -> Color { YearPalette.color(for: year) }
+
     private func lineWidth(for year: Int) -> CGFloat { year == currentYear ? 3 : 1.5 }
+
+    /// Number of days in the current year (365 or 366).
+    private var daysInYear: Int {
+        Calendar.current.range(of: .day, in: .year, for: Date())?.count ?? 365
+    }
+
+    /// Endpoints of the target line: 0 km on Jan 1, the full goal on Dec 31.
+    private var goalLine: [DataPoint] {
+        [DataPoint(dayOfYear: 0, cumulativeKm: 0),
+         DataPoint(dayOfYear: daysInYear, cumulativeKm: goal)]
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -26,16 +45,17 @@ struct RunChartView: View {
                 .padding(.horizontal)
 
             Chart {
-                // Dashed goal line
-                RuleMark(y: .value("Goal", goal))
-                    .foregroundStyle(.gray.opacity(0.6))
+                // Dashed goal line: the target cumulative distance for each day of the
+                // year, rising from 0 on Jan 1 to the full goal on Dec 31 (as on the web).
+                ForEach(goalLine) { point in
+                    LineMark(
+                        x: .value("Day", point.dayOfYear),
+                        y: .value("km", point.cumulativeKm),
+                        series: .value("Year", "Goal")
+                    )
+                    .foregroundStyle(YearPalette.goal)
                     .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [6, 4]))
-                    .annotation(position: .top, alignment: .trailing) {
-                        Text("Goal \(Int(goal)) km")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                            .padding(.trailing, 4)
-                    }
+                }
 
                 // One LineMark series per year
                 ForEach(chartData) { yearData in
@@ -92,9 +112,9 @@ struct RunChartView: View {
                     HStack(spacing: 4) {
                         // Dashed line legend for goal
                         Rectangle()
-                            .fill(.gray.opacity(0.6))
+                            .fill(YearPalette.goal)
                             .frame(width: 16, height: 1.5)
-                        Text("Goal")
+                        Text("Goal (\(Int(goal)) km)")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
