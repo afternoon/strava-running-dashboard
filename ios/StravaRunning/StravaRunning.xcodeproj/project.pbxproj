@@ -18,6 +18,8 @@
 		CC00000600000000000000C6 /* MetricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000600000000000000B6 /* MetricsView.swift */; };
 		CC00000700000000000000C7 /* RunChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000700000000000000B7 /* RunChartView.swift */; };
 		CC00000800000000000000C8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000800000000000000B8 /* SettingsView.swift */; };
+		CC00000E00000000000000CE /* MonthlyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000E00000000000000BE /* MonthlyChartView.swift */; };
+		CC00000D00000000000000CD /* RecentRunsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000D00000000000000BD /* RecentRunsView.swift */; };
 		CC00000900000000000000C9 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000900000000000000B9 /* LoadingView.swift */; };
 		CC00000A00000000000000CA /* GraphQLClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000A00000000000000BA /* GraphQLClient.swift */; };
 		CC00000B00000000000000CB /* DashboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000B00000000000000BB /* DashboardModels.swift */; };
@@ -58,6 +60,8 @@
 		BB00000600000000000000B6 /* MetricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsView.swift; sourceTree = "<group>"; };
 		BB00000700000000000000B7 /* RunChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunChartView.swift; sourceTree = "<group>"; };
 		BB00000800000000000000B8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BB00000E00000000000000BE /* MonthlyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyChartView.swift; sourceTree = "<group>"; };
+		BB00000D00000000000000BD /* RecentRunsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentRunsView.swift; sourceTree = "<group>"; };
 		BB00000900000000000000B9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		BB00000A00000000000000BA /* GraphQLClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQLClient.swift; sourceTree = "<group>"; };
 		BB00000B00000000000000BB /* DashboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardModels.swift; sourceTree = "<group>"; };
@@ -141,6 +145,8 @@
 				BB00000500000000000000B5 /* LoginView.swift */,
 				BB00000600000000000000B6 /* MetricsView.swift */,
 				BB00000700000000000000B7 /* RunChartView.swift */,
+				BB00000E00000000000000BE /* MonthlyChartView.swift */,
+				BB00000D00000000000000BD /* RecentRunsView.swift */,
 				BB00000800000000000000B8 /* SettingsView.swift */,
 				BB00000900000000000000B9 /* LoadingView.swift */,
 			);
@@ -283,6 +289,8 @@
 				CC00000500000000000000C5 /* LoginView.swift in Sources */,
 				CC00000600000000000000C6 /* MetricsView.swift in Sources */,
 				CC00000700000000000000C7 /* RunChartView.swift in Sources */,
+				CC00000E00000000000000CE /* MonthlyChartView.swift in Sources */,
+				CC00000D00000000000000CD /* RecentRunsView.swift in Sources */,
 				CC00000800000000000000C8 /* SettingsView.swift in Sources */,
 				CC00000900000000000000C9 /* LoadingView.swift in Sources */,
 				CC00000A00000000000000CA /* GraphQLClient.swift in Sources */,

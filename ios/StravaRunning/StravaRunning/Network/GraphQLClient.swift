@@ -56,6 +56,14 @@ final class GraphQLClient {
                 cumulativeKm
               }
             }
+            recentRuns {
+              startDate
+              distanceKm
+            }
+            monthlyData {
+              year
+              totals
+            }
           }
         }
         """

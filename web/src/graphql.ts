@@ -28,10 +28,22 @@ interface Metrics {
   lastSevenDays: number;
 }
 
+interface RecentRun {
+  startDate: string;
+  distanceKm: number;
+}
+
+interface MonthlyData {
+  year: number;
+  totals: number[];
+}
+
 interface DashboardPayload {
   goal: number;
   metrics: Metrics;
   chartData: YearData[];
+  recentRuns: RecentRun[];
+  monthlyData: MonthlyData[];
 }
 
 async function resolveDashboard(
@@ -76,10 +88,29 @@ async function resolveDashboard(
     return { year, points };
   });
 
+  const recentRuns: RecentRun[] = [...activities]
+    .sort(
+      (a, b) =>
+        new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
+    )
+    .slice(0, 8)
+    .map((a) => ({ startDate: a.start_date, distanceKm: a.distance_meters / 1000 }));
+
+  const monthlyData: MonthlyData[] = years.map((year) => {
+    const totals = new Array<number>(12).fill(0);
+    for (const a of activities) {
+      const d = new Date(a.start_date);
+      if (d.getFullYear() === year) totals[d.getMonth()] += a.distance_meters / 1000;
+    }
+    return { year, totals };
+  });
+
   return {
     goal: GOAL_KM,
     metrics: { distanceThisYear, targetByToday, delta, lastSevenDays },
     chartData,
+    recentRuns,
+    monthlyData,
   };
 }
 
@@ -96,6 +127,16 @@ type DashboardData {
   goal: Float!
   metrics: Metrics!
   chartData: [YearData!]!
+  recentRuns: [RecentRun!]!
+  monthlyData: [MonthlyData!]!
+}
+type RecentRun {
+  startDate: String!
+  distanceKm: Float!
+}
+type MonthlyData {
+  year: Int!
+  totals: [Float!]!
 }
 type Metrics {
   distanceThisYear: Float!
