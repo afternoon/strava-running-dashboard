@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#FC4C02"/>
+  <g fill="none" stroke="#fff" stroke-width="84" stroke-linecap="round" stroke-linejoin="round">
+    <!-- torso -->
+    <path d="M610 350 L470 600"/>
+    <!-- front arm: elbow forward-down, forearm forward-up -->
+    <path d="M610 350 L700 460 L810 400"/>
+    <!-- back arm: elbow back-down, forearm back -->
+    <path d="M610 350 L488 378 L405 475"/>
+    <!-- front leg: knee driving forward, shin down -->
+    <path d="M470 600 L655 585 L700 790"/>
+    <!-- back leg: trailing, heel kicked up -->
+    <path d="M470 600 L365 755 L215 690"/>
+  </g>
+  <circle cx="690" cy="210" r="80" fill="#fff"/>
+</svg>
