@@ -9,8 +9,8 @@ struct MetricsView: View {
         VStack(spacing: 12) {
             // 2×2 metric grid
             HStack(spacing: 12) {
-                MetricCard(title: "This Year",   value: metrics.distanceThisYear.kmString, color: .orange)
-                MetricCard(title: "Target Today", value: metrics.targetByToday.kmString,   color: .blue)
+                MetricCard(title: "This year",   value: metrics.distanceThisYear.kmString, color: .orange)
+                MetricCard(title: "Target today", value: metrics.targetByToday.kmString,   color: .blue)
             }
             HStack(spacing: 12) {
                 MetricCard(
@@ -18,7 +18,7 @@ struct MetricsView: View {
                     value: (metrics.delta >= 0 ? "+" : "") + metrics.delta.kmString,
                     color: deltaColor
                 )
-                MetricCard(title: "Last 7 Days", value: metrics.lastSevenDays.kmString, color: .purple)
+                MetricCard(title: "Last 7 days", value: metrics.lastSevenDays.kmString, color: .purple)
             }
         }
     }

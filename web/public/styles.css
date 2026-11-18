@@ -28,14 +28,13 @@ a:hover { color: var(--accent); }
 /* Dashboard - mobile first (iPhone 14: 390x844) */
 body.dashboard { padding: 12px; }
 body.dashboard h1 { font-size: 15px; font-weight: 500; color: var(--fg-muted); margin-bottom: 8px; }
-body.dashboard h1::before { content: "~/"; color: var(--accent); }
 .cards { display: none; }
 .timeline-section { margin-bottom: 8px; }
 .runs-panel { display: none; }
 .chart-container { background: var(--panel); padding: 8px 4px; }
 .metrics-card { background: var(--panel); padding: 6px 12px; }
 .metrics-table { width: 100%; border-collapse: collapse; }
-.metric-label { font-size: 12px; color: var(--fg-muted); padding: 3px 0; text-transform: lowercase; }
+.metric-label { font-size: 12px; color: var(--fg-muted); padding: 3px 0; }
 .metric-value { font-size: 18px; font-weight: 700; text-align: right; padding: 3px 0; }
 .runs-card { background: var(--panel); padding: 6px 12px; margin-top: 8px; }
 .runs-table { width: 100%; border-collapse: collapse; font-size: 11px; }
@@ -49,8 +48,7 @@ body.dashboard h1::before { content: "~/"; color: var(--accent); }
 .delta-bad { color: var(--bad); }
 .footer { margin-top: 10px; font-size: 12px; color: var(--fg-faint); text-align: center; }
 .monthly-chart-container { background: var(--panel); padding: 8px 4px; margin-top: 8px; }
-.section-title { font-size: 12px; font-weight: 500; color: var(--fg-muted); padding: 8px 8px 0; text-transform: lowercase; }
-.section-title::before { content: "// "; color: var(--fg-faint); }
+.section-title { font-size: 12px; font-weight: 500; color: var(--fg-muted); padding: 8px 8px 0; }
 
 /* Desktop - restore original layout */
 @media (min-width: 640px) {
@@ -58,8 +56,7 @@ body.dashboard h1::before { content: "~/"; color: var(--accent); }
   body.dashboard h1 { font-size: 22px; margin-bottom: 20px; }
   .cards { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
   .card { background: var(--panel); padding: 20px 24px; flex: 1; min-width: 160px; }
-  .card .label { font-size: 12px; color: var(--fg-muted); text-transform: lowercase; }
-  .card .label::before { content: "// "; color: var(--fg-faint); }
+  .card .label { font-size: 12px; color: var(--fg-muted); }
   .card .value { font-size: 3.5em; font-weight: 700; padding: 0.5em 0 0.25em; letter-spacing: -0.02em; }
   .timeline-section { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 0; }
   .runs-panel { display: block; flex: 0 0 20%; background: var(--panel); padding: 12px; }

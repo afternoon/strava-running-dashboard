@@ -14,7 +14,7 @@ struct LoginView: View {
                     .foregroundStyle(.orange)
 
                 VStack(spacing: 8) {
-                    Text("Running Dashboard")
+                    Text("Running")
                         .font(.largeTitle.bold())
                     Text("Connect your Strava account\nto view your running progress.")
                         .font(.subheadline)
