@@ -23,7 +23,7 @@ struct MonthlyChartView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Monthly Distance")
+            Text("Monthly distance")
                 .font(.headline)
                 .padding(.horizontal)
 

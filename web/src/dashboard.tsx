@@ -328,12 +328,12 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Running Dashboard</title>
+        <title>Running dashboard</title>
         <link rel="stylesheet" href="/styles.css" />
         <script src="/refresh.js" defer></script>
       </head>
       <body class="dashboard">
-        <h1>Running Dashboard {currentYear}</h1>
+        <h1>Running dashboard {currentYear}</h1>
         <div class="cards">
           <div class="card">
             <div class="label">Distance this year</div>
@@ -380,7 +380,7 @@ export function Dashboard({ activities }: { activities: Activity[] }) {
           <RunsTable activities={activities} />
         </div>
         <div class="monthly-chart-container">
-          <h2 class="section-title">Monthly Distance</h2>
+          <h2 class="section-title">Monthly distance</h2>
           <MonthlyChart currentYear={currentYear} monthlyByYear={monthlyByYear} currentMonth={now.getMonth()} />
         </div>
         <div class="footer">
@@ -402,7 +402,7 @@ export function ConnectPage() {
       </head>
       <body class="connect">
         <div class="container">
-          <h1>Running Dashboard</h1>
+          <h1>Running dashboard</h1>
           <p>Connect your Strava account to get started.</p>
           <a class="btn" href="/auth">Connect with Strava</a>
         </div>
